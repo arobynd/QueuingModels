@@ -208,7 +208,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                     ###########
                     q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1+ round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
-                    MIPRunTime = 0 
+                    MIPRunTime = 0
 
 
                 if not q.empty():
