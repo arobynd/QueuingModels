@@ -552,147 +552,6 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                         stopWhenQueue=stopWhenQueue,
                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
-        #########################################
-        # NAIVE STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
-        #########################################
-
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression(inputData=SimData,
-        #                            outputFile=directory + "/MIP_N_R_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-        #                            VMs=createDefaultVMs(virtualMachines),
-        #                            schedulingPolicy="MIP",
-        #                            instanceCapTime=instanceCapTime,
-        #                            groupSize=gSize,
-        #                            searchTime=searchTime,
-        #                            GAPsize=GAPsize,
-        #                            model="model1")
-        #
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimData,
-        #                                            outputFile=directory + "/MIP_N_RC_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model2")
-        #
-        # ###
-        #
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression(inputData=SimDataCheap,
-        #                                            outputFile=directory + "/MIP_N_R_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model1")
-        #
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataCheap,
-        #                                            outputFile=directory + "/MIP_N_RC_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model2")
-        #
-        # ###
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression(inputData=SimDataTrivial,
-        #                                             outputFile=directory + "/MIP_N_R_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                             VMs=createDefaultVMs(virtualMachines),
-        #                                             schedulingPolicy="MIP",
-        #                                             instanceCapTime=instanceCapTime,
-        #                                             groupSize=gSize,
-        #                                             searchTime=searchTime,
-        #                                             GAPsize=GAPsize,
-        #                                             model="model1")
-        #
-        # MIPsimulateInstanceArrivals_NaiveStrategy_Regression_Classification( inputData=SimDataTrivial,
-        #                                                             outputFile=directory + "/MIP_N_RC_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                                             VMs=createDefaultVMs(virtualMachines),
-        #                                                             schedulingPolicy="MIP",
-        #                                                             instanceCapTime=instanceCapTime,
-        #                                                             groupSize=gSize,
-        #                                                             searchTime=searchTime,
-        #                                                             GAPsize=GAPsize,
-        #                                                             model="model2")
-
-
-        #########################################
-        # HEURISTIC STRATEGY 2 SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
-        # The heuristic based execution is applied only for instances not scheduled by MIP
-        #########################################
-
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression(inputData=SimData,
-        #                                            outputFile=directory + "/MIP_H2_R_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model1",
-        #                                            stopWhenQueue=stopWhenQueue)
-        #
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression_Classification(inputData=SimData,
-        #                                            outputFile=directory + "/MIP_H2_RC_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model2",
-        #                                            stopWhenQueue=stopWhenQueue)
-        #
-        # ###
-        #
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression(inputData=SimDataCheap,
-        #                                            outputFile=directory + "/MIP_H2_R_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model1",
-        #                                            stopWhenQueue=stopWhenQueue)
-        #
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression_Classification(inputData=SimDataCheap,
-        #                                            outputFile=directory + "/MIP_H2_RC_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                            VMs=createDefaultVMs(virtualMachines),
-        #                                            schedulingPolicy="MIP",
-        #                                            instanceCapTime=instanceCapTime,
-        #                                            groupSize=gSize,
-        #                                            searchTime=searchTime,
-        #                                            GAPsize=GAPsize,
-        #                                            model="model2",
-        #                                            stopWhenQueue=stopWhenQueue)
-        #
-        # ###
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression(inputData=SimDataTrivial,
-        #                                             outputFile=directory + "/MIP_H2_R_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                             VMs=createDefaultVMs(virtualMachines),
-        #                                             schedulingPolicy="MIP",
-        #                                             instanceCapTime=instanceCapTime,
-        #                                             groupSize=gSize,
-        #                                             searchTime=searchTime,
-        #                                             GAPsize=GAPsize,
-        #                                             model="model1",
-        #                                             stopWhenQueue=stopWhenQueue)
-        #
-        # MIPsimulateInstanceArrivals_HeuristicStrategy_NotScheduled_Regression_Classification( inputData=SimDataTrivial,
-        #                                                             outputFile=directory + "/MIP_H2_RC_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-        #                                                             VMs=createDefaultVMs(virtualMachines),
-        #                                                             schedulingPolicy="MIP",
-        #                                                             instanceCapTime=instanceCapTime,
-        #                                                             groupSize=gSize,
-        #                                                             searchTime=searchTime,
-        #                                                             GAPsize=GAPsize,
-        #                                                             model="model2",
-        #                                                             stopWhenQueue=stopWhenQueue)
 
 ############################################################
 ############################################################
@@ -791,21 +650,21 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                                       stopWhenQueue=stopWhenQueue,
                                       dequeueWhenNotScheduledMIP=0)
 
-        ExecuteMIPSimulations(MIPnumber,
-                                      SimData = SimData ,
-                                      SimDataAll = SimDataAll ,
-                                      SimDataCheap = SimDataCheap ,
-                                      SimDataTrivial = SimDataTrivial,
-                                      dataSetPartition=dataSetPartition,
-                                      simulationResultsDir=simResultsDir,
-                                      virtualMachines=virtualMachines,
-                                      instanceCapTime=instanceCapTime,
-                                      instanceGroupSize=instanceGroupSize,
-                                      BigM=False,
-                                      searchTime=searchTime,
-                                      GAPsize=GAPsize,
-                                      stopWhenQueue=stopWhenQueue,
-                                      dequeueWhenNotScheduledMIP=8)
+        # ExecuteMIPSimulations(MIPnumber,
+        #                               SimData = SimData ,
+        #                               SimDataAll = SimDataAll ,
+        #                               SimDataCheap = SimDataCheap ,
+        #                               SimDataTrivial = SimDataTrivial,
+        #                               dataSetPartition=dataSetPartition,
+        #                               simulationResultsDir=simResultsDir,
+        #                               virtualMachines=virtualMachines,
+        #                               instanceCapTime=instanceCapTime,
+        #                               instanceGroupSize=instanceGroupSize,
+        #                               BigM=False,
+        #                               searchTime=searchTime,
+        #                               GAPsize=GAPsize,
+        #                               stopWhenQueue=stopWhenQueue,
+        #                               dequeueWhenNotScheduledMIP=8)
 
 
 
@@ -875,7 +734,7 @@ if (testNumber==1 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -915,7 +774,7 @@ if (testNumber==2 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -953,7 +812,7 @@ if (testNumber==3 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -993,7 +852,7 @@ if (testNumber==4 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 ####################
@@ -1030,7 +889,7 @@ if (testNumber==5 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -1069,7 +928,7 @@ if (testNumber==6 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -1108,7 +967,7 @@ if (testNumber==7 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -1147,7 +1006,7 @@ if (testNumber==8 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -1186,7 +1045,7 @@ if (testNumber==9 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)
 
 
@@ -1225,5 +1084,5 @@ if (testNumber==10 or testNumber==0):
         PredictionsInputFileCheapC = PredictionsInputFileCheapC,
         seed=12345,
         instanceCapTime=3598,
-        searchTime = 60,
+        searchTime = 1,
         GAPsize = 0)

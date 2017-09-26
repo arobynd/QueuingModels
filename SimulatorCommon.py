@@ -72,7 +72,7 @@ def getVM_CSV(VMs):
 ##############################
 
 
-def assignPriorityForScheduling(index, row, schedulingPolicy):
+def assignPriorityForScheduling(index, row, schedulingPolicy, nextEndTime=0):
     # Returns an object Instance(ID, RealServiceTime, PredictedServiceTime, ArrivalTime, priority)
 
     if schedulingPolicy == "FCFS":  # The priority is the arrival time
@@ -84,8 +84,10 @@ def assignPriorityForScheduling(index, row, schedulingPolicy):
                         row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"])
 
     elif schedulingPolicy == "MIP": #The priority is the predicted start time after running MIP using estimated service times
+        #return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
+                        #row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]*row["ArrivalTime"])#row["MIPPredictedTimeServiceBegins"])
         return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
-                        row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]*row["ArrivalTime"])#row["MIPPredictedTimeServiceBegins"])
+                        row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]+nextEndTime)
     else:
         print "Unknown policy, default arrival time will be used as queuing priority"
         return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
