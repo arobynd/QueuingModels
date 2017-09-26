@@ -684,7 +684,7 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 0 #0 - all tests
+    testNumber = 7 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
     MIPnumber = 0 #0 - all MIP tests
     virtualMachine = 1
@@ -735,7 +735,7 @@ if (testNumber==1 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -775,7 +775,7 @@ if (testNumber==2 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 ####################
@@ -813,7 +813,7 @@ if (testNumber==3 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -853,7 +853,7 @@ if (testNumber==4 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 ####################
 if (testNumber==5 or testNumber==0):
@@ -890,7 +890,7 @@ if (testNumber==5 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -929,7 +929,7 @@ if (testNumber==6 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -968,7 +968,7 @@ if (testNumber==7 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -1007,7 +1007,7 @@ if (testNumber==8 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -1046,7 +1046,7 @@ if (testNumber==9 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)
 
 
 
@@ -1085,4 +1085,4 @@ if (testNumber==10 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0)
+        GAPsize = 0.3)

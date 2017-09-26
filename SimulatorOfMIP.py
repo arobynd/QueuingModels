@@ -11,29 +11,29 @@ import numpy as np
 
 ##############################
 ##############################
-def HeuristicDeleteWhenNotScheduledMIP(queue, Time, simData, vmID, dequeueWhenNotScheduledMIP=0):
-
-    # The instance is put in the queue if dequeueWhenNotScheduledMIP is disabled (i.e., 0 ) or when the instance is determined
-    # not to be scheduled for execution less than (dequeueWhenNotScheduledMIP) times
-
-    auxQueue = Queue.PriorityQueue()
-    while not queue.empty():
-        instance = queue.get()
-        if (dequeueWhenNotScheduledMIP!=0 and simData.loc[instance.ID, "MIPnotScheduled"] >= dequeueWhenNotScheduledMIP):
-            simData.loc[instance.ID, "TimeServiceBegins"] = Time
-            simData.loc[instance.ID, "TimeServiceEnds"] = Time
-            simData.loc[instance.ID, "Attended"] = 0
-            simData.loc[instance.ID, "Solved"] = 0
-            simData.loc[instance.ID, "Stopped"] = 0
-            simData.loc[instance.ID, "WaitingTimeInQueue"] = Time - instance.ArrivalTime
-            simData.loc[instance.ID, "IdleTimeOfServer"] = 0
-            simData.loc[instance.ID, "VM"] = vmID
-            simData.loc[instance.ID, "TimeInstanceInSystem"] = Time - instance.ArrivalTime
-            simData.loc[instance.ID, "QueuedInstances"] = queue.qsize() + 1
-        else:
-            auxQueue.put(instance)
-
-    return auxQueue
+# def HeuristicDeleteWhenNotScheduledMIP(queue, Time, simData, vmID, dequeueWhenNotScheduledMIP=0):
+#
+#     # The instance is put in the queue if dequeueWhenNotScheduledMIP is disabled (i.e., 0 ) or when the instance is determined
+#     # not to be scheduled for execution less than (dequeueWhenNotScheduledMIP) times
+#
+#     auxQueue = Queue.PriorityQueue()
+#     while not queue.empty():
+#         instance = queue.get()
+#         if (dequeueWhenNotScheduledMIP!=0 and simData.loc[instance.ID, "MIPnotScheduled"] >= dequeueWhenNotScheduledMIP):
+#             simData.loc[instance.ID, "TimeServiceBegins"] = Time
+#             simData.loc[instance.ID, "TimeServiceEnds"] = Time
+#             simData.loc[instance.ID, "Attended"] = 0
+#             simData.loc[instance.ID, "Solved"] = 0
+#             simData.loc[instance.ID, "Stopped"] = 0
+#             simData.loc[instance.ID, "WaitingTimeInQueue"] = Time - instance.ArrivalTime
+#             simData.loc[instance.ID, "IdleTimeOfServer"] = 0
+#             simData.loc[instance.ID, "VM"] = vmID
+#             simData.loc[instance.ID, "TimeInstanceInSystem"] = Time - instance.ArrivalTime
+#             simData.loc[instance.ID, "QueuedInstances"] = queue.qsize() + 1
+#         else:
+#             auxQueue.put(instance)
+#
+#     return auxQueue
 
 ##############################
 ##############################
@@ -98,7 +98,7 @@ def HeuristicEvaluateContinueToExecuteMIP(queue, simData, VMs, ArrivingInstanceT
 
 
 
-def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, nextEndTimeCSV, simData, model="model1", machines=1):
+def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, nextEndTimeCSV, simData, model="model1", machines=1, nextEndTime=0):
     auxQueue = Queue.PriorityQueue()
     finalQueue = Queue.PriorityQueue()
     print "Executing MIP with:"
@@ -129,6 +129,12 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
     # Create file in case CPLEX - MIP model fails to create it. The file will contain (ObjectiveValue,BestRelaxation,Gap)
     cmd = "touch " + outputFile + "_Obj.csv"
     os.system(cmd)
+    cmd = "echo -n >> " + outputFile + "_Obj.csv" #delete file content
+    os.system(cmd)
+    cmd = "echo 'ObjectiveValue,BestRelaxation,Gap' >> " + outputFile + "_Obj.csv"
+    os.system(cmd)
+    cmd = "echo '0,0,"+str(GAPsize+1)+"' >> " + outputFile + "_Obj.csv" #add line with unwanted Gap. If Cplex finds an answer, it will be updated
+    os.system(cmd)
 
     #Command to execute MIP model
     cmd = "bash runMIP.sh " + \
@@ -145,21 +151,32 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
           str(machines) + " | tee -a " + SolutionsLog
     os.system(cmd)
 
-    MIPsimulationData = pd.read_csv(outputFile + "_Temp.csv")
-    MIPobjectiveData = pd.read_csv(outputFile + "_Obj.csv")
+    MIPsimulationData = pd.read_csv(outputFile + "_Temp.csv") #Read Cplex solution
 
+    MIPobjectiveData = pd.read_csv(outputFile + "_Obj.csv") #Read Objective and Gap data
+    rowObjective = MIPobjectiveData.tail(1) #Read the last Gap
+    value = float(rowObjective["Gap"].replace(",", ".")) # Get the last Gap Value
 
-    while not auxQueue.empty():
-        instance = auxQueue.get()
-        row = MIPsimulationData[MIPsimulationData.ArrivalTime == instance.ArrivalTime] #If MIP finds an answer, then there must be a match for each arrival
-        value = MIPobjectiveData ???
-        if len(row)>0:#If MIP finds a solution for the actual queued instances and the solution fulfills some basic quality GAPsize
-            instance.priority = int(row["MIPPredictedTimeServiceBegins"])
-            simData.loc[instance.ID, "MIPAttended"] =int(row["MIPAttended"])
-            if ( int(row["MIPAttended"]) == 0 ):
-                simData.loc[instance.ID, "MIPnotScheduled"] = simData.loc[instance.ID, "MIPnotScheduled"] + 1
-        print instance
-        finalQueue.put(instance)
+    if (value >= (GAPsize * -1)) and (value <= (GAPsize)): # If MIP finds an answer within (+-) the GAPsize
+        print "Solution fulfills the GAP....Wanted Gap (+/-): " + str(GAPsize) + "....CPLEX Gap: " + str(value)
+        print "MIP plicy will be applied"
+        while not auxQueue.empty():
+            instance = auxQueue.get()
+            row = MIPsimulationData[MIPsimulationData.ArrivalTime == instance.ArrivalTime] #If MIP finds an answer, then there must be a match for each arrival
+            if len(row)>0:#If MIP finds a solution for the actual queued instances
+                instance.priority = int(row["MIPPredictedTimeServiceBegins"])
+                simData.loc[instance.ID, "MIPAttended"] =int(row["MIPAttended"])
+                if ( int(row["MIPAttended"]) == 0 ):
+                    simData.loc[instance.ID, "MIPnotScheduled"] = simData.loc[instance.ID, "MIPnotScheduled"] + 1
+            print instance
+            finalQueue.put(instance)
+    else: #update priorities to FCFS
+        print "Solution does not fulfill the GAP....Wanted Gap (+/-): " + str(GAPsize) + "....CPLEX Gap: " + str(value)
+        print "SJF plicy will be applied"
+        while not auxQueue.empty():
+            instance = auxQueue.get()
+            instance.priority = instance.PredictedServiceTime + nextEndTime #fix priorities according to the next end time and predicted service times
+            finalQueue.put(instance)
 
     return finalQueue
 
@@ -210,12 +227,12 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if(q.qsize() > 1):
-                        q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs))
+                        q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs), VMs[vmID].nextEndTime + 1)
                         MIPRunTime = findLastMIPRunTime(outputFile)
                     else:
                         MIPRunTime = 0
                     ###########
-                    q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1+ round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
+                    #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1+ round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
                     MIPRunTime = 0
 
@@ -283,12 +300,12 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
             # Execute MIP every groupSize arriving Instances...To update priorities
             if (index % groupSize == 0):
                 if (q.qsize() > 1):
-                    q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs))
+                    q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs), VMs[vmID].nextEndTime + 1)
                     MIPRunTime = findLastMIPRunTime(outputFile)
                 else:
                     MIPRunTime = 0
                 ###########
-                q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
+                #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
             else:
                 MIPRunTime = 0
 
@@ -358,12 +375,12 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if (q.qsize() > 1):
-                        q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs))
+                        q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs), VMs[vmID].nextEndTime + 1)
                         MIPRunTime = findLastMIPRunTime(outputFile)
                     else:
                         MIPRunTime = 0
                     ###########
-                    q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1, simData, vmID, dequeueWhenNotScheduledMIP)
+                    #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1, simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
                     MIPRunTime = 0
 
@@ -439,12 +456,12 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
             # Execute MIP every groupSize arriving Instances...To update priorities
             if (index % groupSize == 0):
                 if (q.qsize() > 1):
-                    q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData,model, len(VMs))
+                    q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData,model, len(VMs), VMs[vmID].nextEndTime + 1)
                     MIPRunTime = findLastMIPRunTime(outputFile)
                 else:
                     MIPRunTime = 0
                 ###########
-                q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
+                #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
             else:
                 MIPRunTime = 0
 
