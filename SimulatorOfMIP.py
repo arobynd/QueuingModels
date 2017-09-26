@@ -146,12 +146,13 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
     os.system(cmd)
 
     MIPsimulationData = pd.read_csv(outputFile + "_Temp.csv")
+    MIPobjectiveData = pd.read_csv(outputFile + "_Obj.csv")
 
 
     while not auxQueue.empty():
         instance = auxQueue.get()
         row = MIPsimulationData[MIPsimulationData.ArrivalTime == instance.ArrivalTime] #If MIP finds an answer, then there must be a match for each arrival
-
+        value = MIPobjectiveData ???
         if len(row)>0:#If MIP finds a solution for the actual queued instances and the solution fulfills some basic quality GAPsize
             instance.priority = int(row["MIPPredictedTimeServiceBegins"])
             simData.loc[instance.ID, "MIPAttended"] =int(row["MIPAttended"])
