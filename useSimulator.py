@@ -820,7 +820,7 @@ testNumber=""
 testType  = ""
 MIPnumber = ""
 virtualMachine = ""
-#cambio en branch 2
+
 if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
