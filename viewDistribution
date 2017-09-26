@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+simData = pd.read_csv("SimulationResults/10_90/VM_1_WaitingTime_1_500_interArrival_1000_#2017_04_25_17_04_23_onlysolvable=False_completeTest/Simulation_Data_RealServiceTime.csv", index_col=0)
+#values = simData["RealServiceTime"]
+values = simData["RealServiceTime"][(simData["RealServiceTime"] > 890) & (simData["RealServiceTime"] < 2500)]
+print values.describe()
+
+
+#plt.hist(values, bins=100)
+plt.hist(values)
+plt.title("Histogram")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.show()
+
+
+
+##################
+from useSimulator import *
+
+Partition="10_90"
+virtualMachine=1
+waitingL=1
+waitingU=1600
+interMax=1600
+onlySolvableInstances=True
+Test(simResultsDir="VM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'+"_OnlyInstancesWithRuntimesFrom890_2500"),
+    dataSetPartition=Partition,
+    instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
+	instanceGroupSize=[1],
+	virtualMachines=virtualMachine,
+	maxInterArrival=int(interMax),
+    executeTests = {"real": True, "all": True, "trivial": True, "cheap": True},
+    instanceType="INDU",
+    onlySolvable=onlySolvableInstances)

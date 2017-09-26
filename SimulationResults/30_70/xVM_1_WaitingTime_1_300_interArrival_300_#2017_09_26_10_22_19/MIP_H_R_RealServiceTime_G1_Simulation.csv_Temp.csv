@@ -1,0 +1,3 @@
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+140,172049,172092,172232,43,1,1
+3598,172077,172233,172233,156,0,1
