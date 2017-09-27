@@ -175,8 +175,8 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
         print "SJF plicy will be applied"
         while not auxQueue.empty():
             instance = auxQueue.get()
-            instance.priority = instance.PredictedServiceTime + nextEndTime
-            #instance.priority = instance.PredictedServiceTime + nextEndTime + instance.maximumWaitingTime
+            #instance.priority = instance.PredictedServiceTime + nextEndTime
+            instance.priority = instance.PredictedServiceTime + nextEndTime + instance.maximumWaitingTime
             #fix priorities according to the next end time and predicted service times
             #xxxxxxxxxxxxxxxxxxxx utilizar informacion sobre el tiempo de llegada....el tiempo de llegada y el tiempo maximo de espera y el tiempo actual
             #dan una buena idea de cuanto puede esperar una instancia
