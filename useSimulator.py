@@ -650,22 +650,6 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                                       stopWhenQueue=stopWhenQueue,
                                       dequeueWhenNotScheduledMIP=0)
 
-        # ExecuteMIPSimulations(MIPnumber,
-        #                               SimData = SimData ,
-        #                               SimDataAll = SimDataAll ,
-        #                               SimDataCheap = SimDataCheap ,
-        #                               SimDataTrivial = SimDataTrivial,
-        #                               dataSetPartition=dataSetPartition,
-        #                               simulationResultsDir=simResultsDir,
-        #                               virtualMachines=virtualMachines,
-        #                               instanceCapTime=instanceCapTime,
-        #                               instanceGroupSize=instanceGroupSize,
-        #                               BigM=False,
-        #                               searchTime=searchTime,
-        #                               GAPsize=GAPsize,
-        #                               stopWhenQueue=stopWhenQueue,
-        #                               dequeueWhenNotScheduledMIP=8)
-
 
 
 

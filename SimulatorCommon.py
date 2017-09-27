@@ -86,8 +86,10 @@ def assignPriorityForScheduling(index, row, schedulingPolicy, nextEndTime=0):
     elif schedulingPolicy == "MIP": #The priority is the predicted start time after running MIP using estimated service times
         #return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
                         #row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]*row["ArrivalTime"])#row["MIPPredictedTimeServiceBegins"])
-        return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
-                        row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]+nextEndTime)
+        #return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
+        #                row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"], row["PredictedServiceTime"]+nextEndTime + row["maximumWaitingTime"])
+        return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"], row["RealSolvable"], row["PredictedSolvable"], row["maximumWaitingTime"],
+                        row["PredictedServiceTime"] + nextEndTime)
     else:
         print "Unknown policy, default arrival time will be used as queuing priority"
         return Instance(index, row["RealServiceTime"], row["PredictedServiceTime"], row["ArrivalTime"],
