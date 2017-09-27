@@ -668,9 +668,9 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 0 #0 - all tests
+    testNumber = 1 #0 - all tests
     testType = "ALLTESTS" #ALLTESTS, POLICY or MIP
-    MIPnumber = 0 #0 - all MIP tests
+    MIPnumber = 3 #0 - all MIP tests
     virtualMachine = 1
 else:
     print "parametros", sys.argv[1]
@@ -688,7 +688,7 @@ else:
 if (testNumber==1 or testNumber==0):
     waitingL=1
     waitingU= int(300 / virtualMachine)
-    interMax= int(300 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -728,7 +728,7 @@ if (testNumber==1 or testNumber==0):
 if (testNumber==2 or testNumber==0):
     waitingL=1
     waitingU= int(500 / virtualMachine)
-    interMax= int(1000 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -765,8 +765,8 @@ if (testNumber==2 or testNumber==0):
 ####################
 if (testNumber==3 or testNumber==0):
     waitingL=1
-    waitingU= int(600 / virtualMachine)
-    interMax= int(300 / virtualMachine)
+    waitingU= int(700 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -806,7 +806,7 @@ if (testNumber==3 or testNumber==0):
 if (testNumber==4 or testNumber==0):
     waitingL=1
     waitingU= int(1000 / virtualMachine)
-    interMax= int(300 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -843,7 +843,7 @@ if (testNumber==4 or testNumber==0):
 if (testNumber==5 or testNumber==0):
     waitingL=1
     waitingU= int(1500 / virtualMachine)
-    interMax= int(3600 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -881,8 +881,8 @@ if (testNumber==5 or testNumber==0):
 ####################
 if (testNumber==6 or testNumber==0):
     waitingL=1
-    waitingU= int(3600 / virtualMachine)
-    interMax= int(3600 / virtualMachine)
+    waitingU= int(3000 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -920,8 +920,8 @@ if (testNumber==6 or testNumber==0):
 ####################
 if (testNumber==7 or testNumber==0):
     waitingL= int(1000 / virtualMachine)
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(300 / virtualMachine)
+    waitingU= int(2000 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -960,7 +960,7 @@ if (testNumber==7 or testNumber==0):
 if (testNumber==8 or testNumber==0):
     waitingL= int(1000 / virtualMachine)
     waitingU= int(3000 / virtualMachine)
-    interMax= int(400 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -997,9 +997,9 @@ if (testNumber==8 or testNumber==0):
 
 ####################
 if (testNumber==9 or testNumber==0):
-    waitingL= int(1000 / virtualMachine)
+    waitingL= int(2000 / virtualMachine)
     waitingU= int(3000 / virtualMachine)
-    interMax= int(500 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -1036,9 +1036,9 @@ if (testNumber==9 or testNumber==0):
 
 ####################
 if (testNumber==10 or testNumber==0):
-    waitingL= int(1000 / virtualMachine)
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(1000 / virtualMachine)
+    waitingL= int(2000 / virtualMachine)
+    waitingU= int(4000 / virtualMachine)
+    interMax= int(130 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"

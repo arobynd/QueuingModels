@@ -178,7 +178,7 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
             instance.priority = instance.PredictedServiceTime + nextEndTime
             #instance.priority = instance.PredictedServiceTime + nextEndTime + instance.maximumWaitingTime
             #fix priorities according to the next end time and predicted service times
-            #xxxxxxxxxxxxxxxxxxxx utilizar información sobre el tiempo de llegada....el tiempo de llegada y el tiempo máximo de espera y el tiempo actual
+            #xxxxxxxxxxxxxxxxxxxx utilizar informacion sobre el tiempo de llegada....el tiempo de llegada y el tiempo maximo de espera y el tiempo actual
             #dan una buena idea de cuanto puede esperar una instancia
             #utilizar como ordenamiento la instancia que tenga menor tiempo para timeout
             finalQueue.put(instance)
