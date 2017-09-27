@@ -668,9 +668,9 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 7 #0 - all tests
-    testType = "MIP" #ALLTESTS, POLICY or MIP
-    MIPnumber = 3 #0 - all MIP tests
+    testNumber = 0 #0 - all tests
+    testType = "ALLTESTS" #ALLTESTS, POLICY or MIP
+    MIPnumber = 0 #0 - all MIP tests
     virtualMachine = 1
 else:
     print "parametros", sys.argv[1]
