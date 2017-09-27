@@ -686,7 +686,7 @@ if(len(sys.argv)==1):
     solver = "minisat"
     testNumber = 7 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
-    MIPnumber = 0 #0 - all MIP tests
+    MIPnumber = 3 #0 - all MIP tests
     virtualMachine = 1
 else:
     print "parametros", sys.argv[1]
