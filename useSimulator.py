@@ -668,8 +668,8 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 1 #0 - all tests
-    testType = "ALLTESTS" #ALLTESTS, POLICY or MIP
+    testNumber = 7 #0 - all tests
+    testType = "MIP" #ALLTESTS, POLICY or MIP
     MIPnumber = 3 #0 - all MIP tests
     virtualMachine = 1
 else:
@@ -920,8 +920,8 @@ if (testNumber==6 or testNumber==0):
 ####################
 if (testNumber==7 or testNumber==0):
     waitingL= int(1000 / virtualMachine)
-    waitingU= int(2000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    waitingU= int(3000 / virtualMachine)
+    interMax= int(300 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"

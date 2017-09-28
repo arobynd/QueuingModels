@@ -157,6 +157,8 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
     rowObjective = MIPobjectiveData.tail(1) #Read the last Gap
     value = float(rowObjective["Gap"].replace(",", ".")) # Get the last Gap Value
 
+xxxxxxxxxxxxxxxxxxxxxxxxFalta asignar las prioridades MIP a las 4 primeras de la cola
+
     if (value >= (GAPsize * -1)) and (value <= (GAPsize)): # If MIP finds an answer within (+-) the GAPsize
         print "Solution fulfills the GAP....Wanted Gap (+/-): " + str(GAPsize) + "....CPLEX Gap: " + str(value)
         print "MIP plicy will be applied"
@@ -202,7 +204,15 @@ def findLastMIPRunTime(outputFile):
 
 ##############################
 ##############################
-
+def sortBySJF(queue):
+    finalQueue = Queue.PriorityQueue()
+    while not queue.empty():
+        instance = queue.get()
+        instance.priority = instance.PredictedServiceTime
+        finalQueue.put(instance)
+    return finalQueue
+##############################
+##############################
 
 
 
@@ -232,6 +242,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if(q.qsize() > 1):
+                        q = sortBySJF(q)
                         q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs), VMs[vmID].nextEndTime + 1)
                         MIPRunTime = findLastMIPRunTime(outputFile)
                     else:

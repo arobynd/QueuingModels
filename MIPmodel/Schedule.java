@@ -767,9 +767,12 @@ public static int Max(int []array){
 ////////////////////////////////////////////////////////////////////////////////////////////
 	public static int [] stringToArray(String s){
 		String[] aux= s.split(",");
-		int[] auxArray = new int[aux.length];
-		for (int i=0; i < aux.length; i++) {
-	        auxArray[i] = Integer.parseInt(aux[i]);
+		int tam = aux.length;
+		k = 4;
+		if (tam > k){ tam = k; }
+		int[] auxArray = new int[tam];
+		for (int i=0; i < tam; i++) {
+	            auxArray[i] = Integer.parseInt(aux[i]);
 	    }
 		return auxArray;
 	}
