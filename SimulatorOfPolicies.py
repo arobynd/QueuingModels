@@ -2,8 +2,6 @@ import Queue
 from SimulatorSources.Instance import Instance
 from SimulatorCommon import *
 import os
-
-
 import pandas as pd
 import numpy as np
 
@@ -88,51 +86,17 @@ def simulateInstanceArrivals_NaiveStrategy_Regression(inputData, outputFile, VMs
             q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
-
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs=beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
                 vmID = getVMwithSmallestEndTime(VMs)
 
-        #If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        #If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it because the system is idle
 
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs=beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
 
     #Finish to attend queued instances
     while not q.empty():
@@ -140,28 +104,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression(inputData, outputFile, VMs
         q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
-            simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-            simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-            simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-            simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-            simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-            if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                simData.loc[QueuedInstance.ID, "Attended"] = 1
-                if (QueuedInstance.RealServiceTime < instanceCapTime):
-                    simData.loc[QueuedInstance.ID, "Solved"] = 1
-                else:
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-            else:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[
-                    QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                simData.loc[QueuedInstance.ID, "Attended"] = 0
-                simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-            simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-            VMs[vmID].processingInstanceID = QueuedInstance.ID
-            VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+            VMs = beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins", "TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)
@@ -196,62 +139,19 @@ def simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData, 
             q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
-
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"] and (QueuedInstance.PredictedSolvable != 0):
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs=beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
                 vmID = getVMwithSmallestEndTime(VMs)
 
-        #If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it only if predicted solvable
 
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
         elif (ArrivingInstance.PredictedSolvable != 0):
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = 1
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 0
-            VMs[vmID].nextEndTime = simData.loc[ArrivingInstance.ID, "TimeServiceEnds"]
-            simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = doNotProcessInstance(VMs, vmID, ArrivingInstance, simData)
 
     #Finish to attend queued instances
     while not q.empty():
@@ -259,28 +159,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData, 
         q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
-            simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-            simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-            simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-            simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-            simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-            if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"] and (QueuedInstance.PredictedSolvable != 0):
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                simData.loc[QueuedInstance.ID, "Attended"] = 1
-                if (QueuedInstance.RealServiceTime < instanceCapTime):
-                    simData.loc[QueuedInstance.ID, "Solved"] = 1
-                else:
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-            else:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[
-                    QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                simData.loc[QueuedInstance.ID, "Attended"] = 0
-                simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-            simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-            VMs[vmID].processingInstanceID = QueuedInstance.ID
-            VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+            VMs = beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins", "TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)
@@ -318,53 +197,18 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
             q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
-
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[
-                        QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs=beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
                 vmID = getVMwithSmallestEndTime(VMs)
 
-        # If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it because the system is idle
 
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
             q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification=False)
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
 
     # Finish to attend queued instances
     while not q.empty():
@@ -372,27 +216,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
         q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
-            simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-            simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-            simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-            simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-            simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-            if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                simData.loc[QueuedInstance.ID, "Attended"] = 1
-                if (QueuedInstance.RealServiceTime < instanceCapTime):
-                    simData.loc[QueuedInstance.ID, "Solved"] = 1
-                else:
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-            else:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                simData.loc[QueuedInstance.ID, "Attended"] = 0
-                simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-            simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-            VMs[vmID].processingInstanceID = QueuedInstance.ID
-            VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+            VMs = beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins", "TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)
@@ -425,61 +249,19 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
 
             if not q.empty():
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"] and (QueuedInstance.PredictedSolvable != 0):
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs=beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
                 vmID = getVMwithSmallestEndTime(VMs)
 
-        #If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it only if predicted solvable
 
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
             q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification=True)
         elif (ArrivingInstance.PredictedSolvable != 0):
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = 1
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 0
-            VMs[vmID].nextEndTime = simData.loc[ArrivingInstance.ID, "TimeServiceEnds"]
-            simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = doNotProcessInstance(VMs, vmID, ArrivingInstance, simData)
 
     #Finish to attend queued instances
     while not q.empty():
@@ -487,27 +269,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
         q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
-            simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-            simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
-            simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
-            simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-            simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-            if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"] and (QueuedInstance.PredictedSolvable != 0):
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
-                simData.loc[QueuedInstance.ID, "Attended"] = 1
-                if (QueuedInstance.RealServiceTime < instanceCapTime):
-                    simData.loc[QueuedInstance.ID, "Solved"] = 1
-                else:
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-            else:
-                simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                simData.loc[QueuedInstance.ID, "Attended"] = 0
-                simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-            simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-            VMs[vmID].processingInstanceID = QueuedInstance.ID
-            VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+            VMs = beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins", "TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)
@@ -521,4 +283,3 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
     return sim
 ##############################
 ##############################
-

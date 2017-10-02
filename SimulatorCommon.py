@@ -1,8 +1,6 @@
 import Queue
 from SimulatorSources.Instance import Instance
 import os
-
-
 import pandas as pd
 import numpy as np
 
@@ -127,6 +125,9 @@ def CheckConsistency(simDataDir, instanceCapTime):
             return False
     return True
 
+##############################
+##############################
+
 
 def deleteTimedOutInstances(queue, Time, simData, vmID):
     auxQueue = Queue.PriorityQueue()
@@ -147,3 +148,99 @@ def deleteTimedOutInstances(queue, Time, simData, vmID):
             auxQueue.put(instance)
 
     return auxQueue
+
+##############################
+##############################
+
+
+def beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime):
+    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
+    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
+    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
+    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
+    simData.loc[QueuedInstance.ID, "VM"] = vmID
+
+    if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]:
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
+        simData.loc[QueuedInstance.ID, "Attended"] = 1
+        if (QueuedInstance.RealServiceTime < instanceCapTime):
+            simData.loc[QueuedInstance.ID, "Solved"] = 1
+        else:
+            simData.loc[QueuedInstance.ID, "Solved"] = 0
+    else:
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
+        simData.loc[QueuedInstance.ID, "Attended"] = 0
+        simData.loc[QueuedInstance.ID, "Solved"] = 0
+
+    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
+    VMs[vmID].processingInstanceID = QueuedInstance.ID
+    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+    return VMs
+
+##############################
+##############################
+
+
+def beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime):
+    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
+    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1
+    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 - QueuedInstance.ArrivalTime
+    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
+    simData.loc[QueuedInstance.ID, "VM"] = vmID
+
+    if simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"] and (QueuedInstance.PredictedSolvable != 0):
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + QueuedInstance.RealServiceTime
+        simData.loc[QueuedInstance.ID, "Attended"] = 1
+        if (QueuedInstance.RealServiceTime < instanceCapTime):
+            simData.loc[QueuedInstance.ID, "Solved"] = 1
+        else:
+            simData.loc[QueuedInstance.ID, "Solved"] = 0
+    else:
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
+        simData.loc[QueuedInstance.ID, "Attended"] = 0
+        simData.loc[QueuedInstance.ID, "Solved"] = 0
+    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
+
+    VMs[vmID].processingInstanceID = QueuedInstance.ID
+    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+
+    return VMs
+
+##############################
+##############################
+
+
+def beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime):
+    VMs[vmID].processingInstanceID = ArrivingInstance.ID
+    simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
+    simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
+    simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
+    simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
+    simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
+    simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
+    simData.loc[ArrivingInstance.ID, "Attended"] = 1
+    VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
+    if (ArrivingInstance.RealServiceTime < instanceCapTime):
+        simData.loc[ArrivingInstance.ID, "Solved"] = 1
+    else:
+        simData.loc[ArrivingInstance.ID, "Solved"] = 0
+
+    return VMs
+
+
+##############################
+##############################
+
+def doNotProcessInstance(VMs, vmID, ArrivingInstance, simData):
+    VMs[vmID].processingInstanceID = ArrivingInstance.ID
+    simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
+    simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime
+    simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
+    simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = 1
+    simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
+    simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
+    simData.loc[ArrivingInstance.ID, "Attended"] = 0
+    VMs[vmID].nextEndTime = simData.loc[ArrivingInstance.ID, "TimeServiceEnds"]
+    simData.loc[ArrivingInstance.ID, "Solved"] = 0
+
+    return VMs

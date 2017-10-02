@@ -157,7 +157,7 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
     rowObjective = MIPobjectiveData.tail(1) #Read the last Gap
     value = float(rowObjective["Gap"].replace(",", ".")) # Get the last Gap Value
 
-xxxxxxxxxxxxxxxxxxxxxxxxFalta asignar las prioridades MIP a las 4 primeras de la cola
+#xxxxxxxxxxxxxxxxxxxxxxxxFalta asignar las prioridades MIP a las 4 primeras de la cola
 
     if (value >= (GAPsize * -1)) and (value <= (GAPsize)): # If MIP finds an answer within (+-) the GAPsize
         print "Solution fulfills the GAP....Wanted Gap (+/-): " + str(GAPsize) + "....CPLEX Gap: " + str(value)
