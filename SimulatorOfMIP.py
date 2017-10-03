@@ -210,8 +210,12 @@ def sortBySJF(queue):
 
 
 def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, groupSize=5, searchTime=120, GAPsize=0.1, model="model1", stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+
     simData = pd.read_csv(inputData, index_col=0)
-    q = Queue.PriorityQueue()
+    arrivingQueue = Queue.PriorityQueue()
+    executionQueue = Queue.PriorityQueue()
+    k=4
+
     simData["MIPAttended"]=-1
     simData["Stopped"] = 0
     simData["MIPnotScheduled"] = 0
@@ -223,10 +227,41 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
         vmID = getVMwithSmallestEndTime(VMs)
         ArrivingInstance = assignPriorityForScheduling(index, row, schedulingPolicy, VMs[vmID].nextEndTime + 1) #Create the instance
         MIPRunTime = 0
+
+        # There are 4 possibilities:
+        # Option 1: arrivingQueue has instances     executionQueue has instances    -> instances from executionQueue need to continue to run, check if new instances have to be moved to executionQueue
+        # Option 2: arrivingQueue is empty          executionQueue has instances    -> instances from executionQueue need to continue to run
+        # Option 3: arrivingQueue has instances     executionQueue is empty         -> at most k instances need to be moved from arrivingQueue to executionQueue
+        # Option 4: arrivingQueue is empty          executionQueue is empty         -> The system is Idle
+
         # Attend queued instances until the actual instance arrival
-        while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
+        while (not arrivingQueue.empty()) and (not executionQueue.empty()) and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
+
+            arrivingQueue = deleteTimedOutInstances(arrivingQueue, VMs[vmID].nextEndTime + 1, simData, vmID)
+            executionQueue = deleteTimedOutInstances(executionQueue, VMs[vmID].nextEndTime + 1, simData, vmID)
+
+            modifiedFlag = False
+            # Option 1: instances from executionQueue need to continue to run, check if new instances have to be moved to executionQueue
+            if (not arrivingQueue.empty()) and (not executionQueue.empty()):
+                while (executionQueue.qsize() < k) and (firtInstanceRuntime(arrivingQueue) < lastInstanceRuntime(executionQueue)): #otra forma es haciendo un merge queues and select the first k instances to update the executionQueue
+                    modifiedFlag = True
+                    auxInstance = arrivingQueue.get()
+                    executionQueue.put(auxInstance)
+
+
+
+
+
+            # Option 2:
+            elif (arrivingQueue.empty()) and (not executionQueue.empty()):
+
+            # Option 3:
+            elif (not arrivingQueue.empty()) and (executionQueue.empty()):
+
+
+
             ###########
-            q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+
             if not q.empty():
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
@@ -240,10 +275,13 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                     #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1+ round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
                     MIPRunTime = 0
+
                 if not q.empty():
                     QueuedInstance = q.get()
                     VMs = MIPbeginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime)
                     vmID = getVMwithSmallestEndTime(VMs)
+
+
 
         # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it because the system is idle
         #simData.loc[ArrivingInstance.ID, "QueuedInstances"] = q.qsize()
@@ -284,6 +322,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
         print "Inconsistent solution"
 
     return sim
+
 
 
 
