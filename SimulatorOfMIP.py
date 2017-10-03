@@ -312,6 +312,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if (q.qsize() > 1):
+                        q = sortBySJF(q)
                         q = MIPupdateSchedule(q, outputFile, searchTime, GAPsize, instanceCapTime, getVM_CSV(VMs), simData, model, len(VMs), VMs[vmID].nextEndTime + 1)
                         MIPRunTime = findLastMIPRunTime(outputFile)
                     else:
