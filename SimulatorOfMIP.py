@@ -157,8 +157,6 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
     rowObjective = MIPobjectiveData.tail(1) #Read the last Gap
     value = float(rowObjective["Gap"].replace(",", ".")) # Get the last Gap Value
 
-#xxxxxxxxxxxxxxxxxxxxxxxxFalta asignar las prioridades MIP a las 4 primeras de la cola
-
     if (value >= (GAPsize * -1)) and (value <= (GAPsize)): # If MIP finds an answer within (+-) the GAPsize
         print "Solution fulfills the GAP....Wanted Gap (+/-): " + str(GAPsize) + "....CPLEX Gap: " + str(value)
         print "MIP plicy will be applied"
@@ -177,12 +175,7 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
         print "SJF plicy will be applied"
         while not auxQueue.empty():
             instance = auxQueue.get()
-            instance.priority = instance.PredictedServiceTime + nextEndTime
-            #instance.priority = instance.PredictedServiceTime + nextEndTime + instance.maximumWaitingTime
-            #fix priorities according to the next end time and predicted service times
-            #xxxxxxxxxxxxxxxxxxxx utilizar informacion sobre el tiempo de llegada....el tiempo de llegada y el tiempo maximo de espera y el tiempo actual
-            #dan una buena idea de cuanto puede esperar una instancia
-            #utilizar como ordenamiento la instancia que tenga menor tiempo para timeout
+            instance.priority = instance.PredictedServiceTime #+ nextEndTime
             finalQueue.put(instance)
 
     return finalQueue
@@ -230,15 +223,11 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
         vmID = getVMwithSmallestEndTime(VMs)
         ArrivingInstance = assignPriorityForScheduling(index, row, schedulingPolicy, VMs[vmID].nextEndTime + 1) #Create the instance
         MIPRunTime = 0
-
         # Attend queued instances until the actual instance arrival
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
-
             ###########
             q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
-
             if not q.empty():
-
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if(q.qsize() > 1):
@@ -251,62 +240,20 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                     #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1+ round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
                     MIPRunTime = 0
-
-
                 if not q.empty():
                     QueuedInstance = q.get()
-                    simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
-                    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
-                    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
-                    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                    simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-
-                    if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
-                        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
-                        simData.loc[QueuedInstance.ID, "Attended"] = 1
-                        if (QueuedInstance.RealServiceTime < instanceCapTime):
-                            simData.loc[QueuedInstance.ID, "Solved"] = 1
-                        else:
-                            simData.loc[QueuedInstance.ID, "Solved"] = 0
-                    else:
-                        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                        simData.loc[QueuedInstance.ID, "Attended"] = 0
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                    VMs[vmID].processingInstanceID = QueuedInstance.ID
-                    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                    VMs = MIPbeginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime)
                     vmID = getVMwithSmallestEndTime(VMs)
 
-        #If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it because the system is idle
         #simData.loc[ArrivingInstance.ID, "QueuedInstances"] = q.qsize()
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
-            ###########
             q = HeuristicEvaluateContinueToExecuteMIP(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification = False)
-
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
-
+            VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         simData.to_csv(outputFile)
-
-
     #Finish to attend queued instances
     MIPRunTime = 0
     while not q.empty():
@@ -324,31 +271,9 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFi
                 #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
             else:
                 MIPRunTime = 0
-
             if not q.empty():
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs = MIPbeginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins", "TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)
@@ -376,18 +301,14 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
     simData["QueuedInstances"] = 0
 
     for index, row in simData.iterrows():
-
         vmID = getVMwithSmallestEndTime(VMs)
         ArrivingInstance = assignPriorityForScheduling(index, row, schedulingPolicy, VMs[vmID].nextEndTime + 1)  # Create the instance
         MIPRunTime = 0
-
         # Attend queued instances until the actual instance arrival
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
             ###########
             q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
-
             if not q.empty():
-
                 #Execute MIP every groupSize arriving Instances...To update priorities
                 if (index % groupSize == 0):
                     if (q.qsize() > 1):
@@ -399,70 +320,21 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
                     #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1, simData, vmID, dequeueWhenNotScheduledMIP)
                 else:
                     MIPRunTime = 0
-
                 if not q.empty():
-
                     QueuedInstance = q.get()
-                    simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
-                    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
-                    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
-                    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                    simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                    if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (QueuedInstance.PredictedSolvable != 0) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
-                        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
-                        simData.loc[QueuedInstance.ID, "Attended"] = 1
-                        if (QueuedInstance.RealServiceTime < instanceCapTime):
-                            simData.loc[QueuedInstance.ID, "Solved"] = 1
-                        else:
-                            simData.loc[QueuedInstance.ID, "Solved"] = 0
-                    else:
-                        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                        simData.loc[QueuedInstance.ID, "Attended"] = 0
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                    VMs[vmID].processingInstanceID = QueuedInstance.ID
-                    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                    VMs = MIPbeginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime)
                     vmID = getVMwithSmallestEndTime(VMs)
-
-        #If the queue is not empty after simulation, then put it in queue. Otherwise attend it
+        # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it only if predicted solvable
         #simData.loc[ArrivingInstance.ID, "QueuedInstances"] = q.qsize()
-
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime: # and (ArrivingInstance.PredictedSolvable != 0):
             q.put(ArrivingInstance)
             q = HeuristicEvaluateContinueToExecuteMIP(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification = True)
         elif (ArrivingInstance.PredictedSolvable != 0):
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = ArrivingInstance.RealServiceTime
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 1
-            VMs[vmID].nextEndTime = ArrivingInstance.ArrivalTime + ArrivingInstance.RealServiceTime
-
-            if (ArrivingInstance.RealServiceTime < instanceCapTime):
-                simData.loc[ArrivingInstance.ID, "Solved"] = 1
-            else:
-                simData.loc[ArrivingInstance.ID, "Solved"] = 0
+            VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:
-            VMs[vmID].processingInstanceID = ArrivingInstance.ID
-            simData.loc[ArrivingInstance.ID, "TimeServiceBegins"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "TimeServiceEnds"] = ArrivingInstance.ArrivalTime
-            simData.loc[ArrivingInstance.ID, "WaitingTimeInQueue"] = 0
-            simData.loc[ArrivingInstance.ID, "TimeInstanceInSystem"] = 1
-            simData.loc[ArrivingInstance.ID, "IdleTimeOfServer"] = ArrivingInstance.ArrivalTime - VMs[vmID].nextEndTime
-            simData.loc[ArrivingInstance.ID, "VM"] = VMs[vmID].ID
-            simData.loc[ArrivingInstance.ID, "Attended"] = 0
-            VMs[vmID].nextEndTime = simData.loc[ArrivingInstance.ID, "TimeServiceEnds"]
-            simData.loc[ArrivingInstance.ID, "Solved"] = 0
-
+            VMs = doNotProcessInstance(VMs, vmID, ArrivingInstance, simData)
         simData.to_csv(outputFile)
-
     #Finish to attend queued instances
     MIPRunTime = 0
     while not q.empty():
@@ -480,31 +352,9 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inpu
                 #q = HeuristicDeleteWhenNotScheduledMIP(q, VMs[vmID].nextEndTime + 1 + round(MIPRunTime), simData, vmID, dequeueWhenNotScheduledMIP)
             else:
                 MIPRunTime = 0
-
             if not q.empty():
                 QueuedInstance = q.get()
-                simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
-                simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
-                simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
-                simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
-                simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
-                simData.loc[QueuedInstance.ID, "VM"] = vmID
-
-                if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (QueuedInstance.PredictedSolvable != 0) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
-                    simData.loc[QueuedInstance.ID, "Attended"] = 1
-                    if (QueuedInstance.RealServiceTime < instanceCapTime):
-                        simData.loc[QueuedInstance.ID, "Solved"] = 1
-                    else:
-                        simData.loc[QueuedInstance.ID, "Solved"] = 0
-                else:
-                    simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
-                    simData.loc[QueuedInstance.ID, "Attended"] = 0
-                    simData.loc[QueuedInstance.ID, "Solved"] = 0
-
-                simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
-                VMs[vmID].processingInstanceID = QueuedInstance.ID
-                VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+                VMs = MIPbeginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime)
 
     sim = simData.sort_values(by=["TimeServiceBegins","TimeServiceEnds"], ascending=[True, True])
     sim.to_csv(outputFile)

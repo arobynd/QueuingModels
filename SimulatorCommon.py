@@ -244,3 +244,60 @@ def doNotProcessInstance(VMs, vmID, ArrivingInstance, simData):
     simData.loc[ArrivingInstance.ID, "Solved"] = 0
 
     return VMs
+
+##############################
+##############################
+
+def MIPbeginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime):
+    simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
+    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
+    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
+    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
+    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
+    simData.loc[QueuedInstance.ID, "VM"] = vmID
+
+    if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
+        simData.loc[QueuedInstance.ID, "Attended"] = 1
+        if (QueuedInstance.RealServiceTime < instanceCapTime):
+            simData.loc[QueuedInstance.ID, "Solved"] = 1
+        else:
+            simData.loc[QueuedInstance.ID, "Solved"] = 0
+    else:
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
+        simData.loc[QueuedInstance.ID, "Attended"] = 0
+        simData.loc[QueuedInstance.ID, "Solved"] = 0
+
+    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
+    VMs[vmID].processingInstanceID = QueuedInstance.ID
+    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+    return VMs
+
+
+##############################
+##############################
+
+def MIPbeginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime, MIPRunTime):
+    simData.loc[QueuedInstance.ID, "MIPRunTime"] = MIPRunTime
+    simData.loc[QueuedInstance.ID, "QueuedInstances"] = q.qsize() + 1
+    simData.loc[QueuedInstance.ID, "TimeServiceBegins"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime)
+    simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) - QueuedInstance.ArrivalTime
+    simData.loc[QueuedInstance.ID, "IdleTimeOfServer"] = 0
+    simData.loc[QueuedInstance.ID, "VM"] = vmID
+
+    if (simData.loc[QueuedInstance.ID, "WaitingTimeInQueue"] < simData.loc[QueuedInstance.ID, "maximumWaitingTime"]) and (QueuedInstance.PredictedSolvable != 0) and (simData.loc[QueuedInstance.ID, "MIPAttended"] != 0):
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = VMs[vmID].nextEndTime + 1 + round(MIPRunTime) + QueuedInstance.RealServiceTime
+        simData.loc[QueuedInstance.ID, "Attended"] = 1
+        if (QueuedInstance.RealServiceTime < instanceCapTime):
+            simData.loc[QueuedInstance.ID, "Solved"] = 1
+        else:
+            simData.loc[QueuedInstance.ID, "Solved"] = 0
+    else:
+        simData.loc[QueuedInstance.ID, "TimeServiceEnds"] = simData.loc[QueuedInstance.ID, "TimeServiceBegins"]  # No execution time is given
+        simData.loc[QueuedInstance.ID, "Attended"] = 0
+        simData.loc[QueuedInstance.ID, "Solved"] = 0
+
+    simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
+    VMs[vmID].processingInstanceID = QueuedInstance.ID
+    VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+    return VMs
