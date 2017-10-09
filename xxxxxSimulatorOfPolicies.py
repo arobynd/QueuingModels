@@ -83,7 +83,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression(inputData, outputFile, VMs
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
 
             ###########
-            #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+            q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
                 QueuedInstance = q.get()
@@ -101,7 +101,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression(inputData, outputFile, VMs
     #Finish to attend queued instances
     while not q.empty():
         vmID = getVMwithSmallestEndTime(VMs)
-        #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+        q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
             VMs = beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
@@ -136,7 +136,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData, 
         # Attend queued instances until the actual instance arrival
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
             ###########
-            #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+            q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
                 QueuedInstance = q.get()
@@ -156,7 +156,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData, 
     #Finish to attend queued instances
     while not q.empty():
         vmID = getVMwithSmallestEndTime(VMs)
-        #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+        q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
             VMs = beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
@@ -194,7 +194,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
 
             ###########
-            #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+            q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
                 QueuedInstance = q.get()
@@ -213,7 +213,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
     # Finish to attend queued instances
     while not q.empty():
         vmID = getVMwithSmallestEndTime(VMs)
-        #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+        q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
             VMs = beginToProcessInstance_R(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)
@@ -245,7 +245,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
         while not q.empty() and VMs[vmID].nextEndTime < ArrivingInstance.ArrivalTime:
 
             ###########
-            #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+            q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
 
             if not q.empty():
                 QueuedInstance = q.get()
@@ -266,7 +266,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
     #Finish to attend queued instances
     while not q.empty():
         vmID = getVMwithSmallestEndTime(VMs)
-        #q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
+        q = deleteTimedOutInstances(q, VMs[vmID].nextEndTime + 1, simData, vmID)
         if not q.empty():
             QueuedInstance = q.get()
             VMs = beginToProcessInstance_R_C(q, QueuedInstance, simData, VMs, vmID, instanceCapTime)

@@ -106,9 +106,9 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
         os.makedirs(directory)
 
 
-    #########################################
-    # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion models
-    #########################################
+    # #########################################
+    # # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion models
+    # #########################################
     print  "\nExecuting test FCFS_N_R_RealServiceTime_Simulation"
     simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimData,
                               outputFile=directory+"/FCFS_N_R_RealServiceTime_Simulation.csv",
@@ -165,9 +165,9 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime)
 
-    #########################################
-    # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
-    #########################################
+    # #########################################
+    # # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
+    # #########################################
 
     print  "\nExecuting test FCFS_N_RC_RealServiceTime_Simulation"
     simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimData,
@@ -294,9 +294,9 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               stopWhenQueue=stopWhenQueue)
 
 
-    #########################################
-    # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
-    #########################################
+    # #########################################
+    # # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
+    # #########################################
     print  "\nExecuting test FCFS_H_RC_RealServiceTime_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
                              outputFile=directory + "/FCFS_H_RC_RealServiceTime_Simulation.csv",
@@ -365,7 +365,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
 ##############################
 
 
-def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0, instanceGroupSize=[40], BigM=False, searchTime = 60, GAPsize = 0.1,  stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
 
     directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
     if not os.path.exists(directory):
@@ -376,182 +376,160 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
         H2="_H"+str(dequeueWhenNotScheduledMIP)
 
 
-    for gSize in instanceGroupSize:
+    #########################################
+    # HEURISTIC STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
+    #########################################
+    if (virtualMachines==1):
 
-        #########################################
-        # HEURISTIC STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
-        #########################################
-        if (virtualMachines==1):
+        if (MIPnumber==0 or MIPnumber==1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_RealServiceTime_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       stopWhenQueue=stopWhenQueue,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+        if (MIPnumber==0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       stopWhenQueue=stopWhenQueue,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
-            if (MIPnumber==0 or MIPnumber==1):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimData,
-                                                           outputFile=directory + "/MIP_H"+H2+"_R_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-                                                           VMs=createDefaultVMs(virtualMachines),
-                                                           schedulingPolicy="MIP",
-                                                           instanceCapTime=instanceCapTime,
-                                                           groupSize=gSize,
-                                                           searchTime=searchTime,
-                                                           GAPsize=GAPsize,
-                                                           model="model1",
-                                                           stopWhenQueue=stopWhenQueue,
-                                                           dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-            if (MIPnumber==0 or MIPnumber == 2):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
-                                                           outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_G" + str(gSize) + "_Simulation.csv",
-                                                           VMs=createDefaultVMs(virtualMachines),
-                                                           schedulingPolicy="MIP",
-                                                           instanceCapTime=instanceCapTime,
-                                                           groupSize=gSize,
-                                                           searchTime=searchTime,
-                                                           GAPsize=GAPsize,
-                                                           model="model2",
-                                                           stopWhenQueue=stopWhenQueue,
-                                                           dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+            ###
+        if (MIPnumber==0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       stopWhenQueue=stopWhenQueue,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
-                ###
-            if (MIPnumber==0 or MIPnumber == 3):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
-                                                           outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-                                                           VMs=createDefaultVMs(virtualMachines),
-                                                           schedulingPolicy="MIP",
-                                                           instanceCapTime=instanceCapTime,
-                                                           groupSize=gSize,
-                                                           searchTime=searchTime,
-                                                           GAPsize=GAPsize,
-                                                           model="model1",
-                                                           stopWhenQueue=stopWhenQueue,
-                                                           dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+        if (MIPnumber==0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       stopWhenQueue=stopWhenQueue,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
-            if (MIPnumber==0 or MIPnumber == 4):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
-                                                           outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_CheapFeatures_G" + str(gSize) + "_Simulation.csv",
-                                                           VMs=createDefaultVMs(virtualMachines),
-                                                           schedulingPolicy="MIP",
-                                                           instanceCapTime=instanceCapTime,
-                                                           groupSize=gSize,
-                                                           searchTime=searchTime,
-                                                           GAPsize=GAPsize,
-                                                           model="model2",
-                                                           stopWhenQueue=stopWhenQueue,
-                                                           dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+            ###
+        if (MIPnumber==0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
+                                                        outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                        VMs=createDefaultVMs(virtualMachines),
+                                                        schedulingPolicy="MIP",
+                                                        instanceCapTime=instanceCapTime,
+                                                        searchTime=searchTime,
+                                                        GAPsize=GAPsize,
+                                                        model="model1",
+                                                        stopWhenQueue=stopWhenQueue,
+                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
-                ###
-            if (MIPnumber==0 or MIPnumber == 5):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
-                                                            outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-                                                            VMs=createDefaultVMs(virtualMachines),
-                                                            schedulingPolicy="MIP",
-                                                            instanceCapTime=instanceCapTime,
-                                                            groupSize=gSize,
-                                                            searchTime=searchTime,
-                                                            GAPsize=GAPsize,
-                                                            model="model1",
-                                                            stopWhenQueue=stopWhenQueue,
-                                                            dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-            if (MIPnumber==0 or MIPnumber == 6):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification( inputData=SimDataTrivial,
-                                                                            outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_TrivialFeatures_G" + str(gSize) + "_Simulation.csv",
-                                                                            VMs=createDefaultVMs(virtualMachines),
-                                                                            schedulingPolicy="MIP",
-                                                                            instanceCapTime=instanceCapTime,
-                                                                            groupSize=gSize,
-                                                                            searchTime=searchTime,
-                                                                            GAPsize=GAPsize,
-                                                                            model="model2",
-                                                                            stopWhenQueue=stopWhenQueue,
-                                                                            dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-        if (virtualMachines > 1):
-
-            if (MIPnumber == 0 or MIPnumber == 1):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimData,
-                                                                         outputFile=directory + "/MIP_H" + H2 + "_R_RealServiceTime_G" + str(
-                                                                             gSize) + "_Simulation.csv",
-                                                                         VMs=createDefaultVMs(virtualMachines),
-                                                                         schedulingPolicy="MIP",
-                                                                         instanceCapTime=instanceCapTime,
-                                                                         groupSize=gSize,
-                                                                         searchTime=searchTime,
-                                                                         GAPsize=GAPsize,
-                                                                         model="model3",
-                                                                         stopWhenQueue=stopWhenQueue,
-                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-            if (MIPnumber == 0 or MIPnumber == 2):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
-                                                                                        outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_G" + str(
-                                                                                            gSize) + "_Simulation.csv",
-                                                                                        VMs=createDefaultVMs(
-                                                                                            virtualMachines),
-                                                                                        schedulingPolicy="MIP",
-                                                                                        instanceCapTime=instanceCapTime,
-                                                                                        groupSize=gSize,
-                                                                                        searchTime=searchTime,
-                                                                                        GAPsize=GAPsize,
-                                                                                        model="model4",
-                                                                                        stopWhenQueue=stopWhenQueue,
-                                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-                ###
-            if (MIPnumber == 0 or MIPnumber == 3):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
-                                                                         outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_CheapFeatures_G" + str(
-                                                                             gSize) + "_Simulation.csv",
-                                                                         VMs=createDefaultVMs(virtualMachines),
-                                                                         schedulingPolicy="MIP",
-                                                                         instanceCapTime=instanceCapTime,
-                                                                         groupSize=gSize,
-                                                                         searchTime=searchTime,
-                                                                         GAPsize=GAPsize,
-                                                                         model="model3",
-                                                                         stopWhenQueue=stopWhenQueue,
-                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-            if (MIPnumber == 0 or MIPnumber == 4):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
-                                                                                        outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_CheapFeatures_G" + str(
-                                                                                            gSize) + "_Simulation.csv",
-                                                                                        VMs=createDefaultVMs(
-                                                                                            virtualMachines),
-                                                                                        schedulingPolicy="MIP",
-                                                                                        instanceCapTime=instanceCapTime,
-                                                                                        groupSize=gSize,
-                                                                                        searchTime=searchTime,
-                                                                                        GAPsize=GAPsize,
-                                                                                        model="model4",
-                                                                                        stopWhenQueue=stopWhenQueue,
-                                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-                ###
-            if (MIPnumber == 0 or MIPnumber == 5):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
-                                                                         outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_TrivialFeatures_G" + str(
-                                                                             gSize) + "_Simulation.csv",
-                                                                         VMs=createDefaultVMs(virtualMachines),
-                                                                         schedulingPolicy="MIP",
-                                                                         instanceCapTime=instanceCapTime,
-                                                                         groupSize=gSize,
-                                                                         searchTime=searchTime,
-                                                                         GAPsize=GAPsize,
-                                                                         model="model3",
-                                                                         stopWhenQueue=stopWhenQueue,
-                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
-
-            if (MIPnumber == 0 or MIPnumber == 6):
-                MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification(
-                                                                        inputData=SimDataTrivial,
-                                                                        outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_TrivialFeatures_G" + str(
-                                                                            gSize) + "_Simulation.csv",
+        if (MIPnumber==0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues( inputData=SimDataTrivial,
+                                                                        outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
                                                                         VMs=createDefaultVMs(virtualMachines),
                                                                         schedulingPolicy="MIP",
                                                                         instanceCapTime=instanceCapTime,
-                                                                        groupSize=gSize,
                                                                         searchTime=searchTime,
                                                                         GAPsize=GAPsize,
-                                                                        model="model4",
+                                                                        model="model2",
                                                                         stopWhenQueue=stopWhenQueue,
                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
+    if (virtualMachines > 1):
+
+        if (MIPnumber == 0 or MIPnumber == 1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_RealServiceTime_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+        if (MIPnumber == 0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_Q2_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    stopWhenQueue=stopWhenQueue,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+
+        if (MIPnumber == 0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    stopWhenQueue=stopWhenQueue,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+
+        if (MIPnumber == 0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(
+                                                                    inputData=SimDataTrivial,
+                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                    schedulingPolicy="MIP",
+                                                                    instanceCapTime=instanceCapTime,
+                                                                    searchTime=searchTime,
+                                                                    GAPsize=GAPsize,
+                                                                    model="model4",
+                                                                    stopWhenQueue=stopWhenQueue,
+                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+
 
 ############################################################
 ############################################################
@@ -563,7 +541,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
 
 
 
-def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90", instanceMaximumExpectedWaitingTime=0, instanceGroupSize=[40],
+def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90", instanceMaximumExpectedWaitingTime=0,
          virtualMachines=1, maxInterArrival=3600, onlySolvable=False, stopWhenQueue=2,
          PredictionsInputFileR="", PredictionsInputFileAllR="", PredictionsInputFileTrivialR="",
          PredictionsInputFileCheapR="", PredictionsInputFileC="", PredictionsInputFileAllC="",
@@ -643,7 +621,6 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                                       simulationResultsDir=simResultsDir,
                                       virtualMachines=virtualMachines,
                                       instanceCapTime=instanceCapTime,
-                                      instanceGroupSize=instanceGroupSize,
                                       BigM=False,
                                       searchTime=searchTime,
                                       GAPsize=GAPsize,
@@ -668,10 +645,10 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 1 #0 - all tests
+    testNumber = 10 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
-    MIPnumber = 3 #0 - all MIP tests
-    virtualMachine = 1
+    MIPnumber = 1 #0 - all MIP tests
+    virtualMachine = 4
 else:
     print "parametros", sys.argv[1]
     Partition = str(sys.argv[1])
@@ -687,8 +664,8 @@ else:
 ####################
 if (testNumber==1 or testNumber==0):
     waitingL=1
-    waitingU= int(500 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    waitingU= int(300 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -703,7 +680,6 @@ if (testNumber==1 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -719,7 +695,7 @@ if (testNumber==1 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -728,7 +704,7 @@ if (testNumber==1 or testNumber==0):
 if (testNumber==2 or testNumber==0):
     waitingL=1
     waitingU= int(500 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -743,7 +719,6 @@ if (testNumber==2 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -759,14 +734,14 @@ if (testNumber==2 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 ####################
 if (testNumber==3 or testNumber==0):
     waitingL=1
     waitingU= int(700 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -781,7 +756,6 @@ if (testNumber==3 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -797,7 +771,7 @@ if (testNumber==3 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -806,7 +780,7 @@ if (testNumber==3 or testNumber==0):
 if (testNumber==4 or testNumber==0):
     waitingL=1
     waitingU= int(1000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -821,7 +795,6 @@ if (testNumber==4 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -837,13 +810,13 @@ if (testNumber==4 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 ####################
 if (testNumber==5 or testNumber==0):
     waitingL=1
     waitingU= int(1500 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -858,7 +831,6 @@ if (testNumber==5 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -874,7 +846,7 @@ if (testNumber==5 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -882,7 +854,7 @@ if (testNumber==5 or testNumber==0):
 if (testNumber==6 or testNumber==0):
     waitingL=1
     waitingU= int(3000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -897,7 +869,6 @@ if (testNumber==6 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -913,15 +884,15 @@ if (testNumber==6 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
 ####################
 if (testNumber==7 or testNumber==0):
     waitingL= int(1000 / virtualMachine)
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    waitingU= int(2000 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -936,7 +907,6 @@ if (testNumber==7 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -952,7 +922,7 @@ if (testNumber==7 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -960,7 +930,7 @@ if (testNumber==7 or testNumber==0):
 if (testNumber==8 or testNumber==0):
     waitingL= int(1000 / virtualMachine)
     waitingU= int(3000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -975,7 +945,6 @@ if (testNumber==8 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -991,7 +960,7 @@ if (testNumber==8 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -999,7 +968,7 @@ if (testNumber==8 or testNumber==0):
 if (testNumber==9 or testNumber==0):
     waitingL= int(2000 / virtualMachine)
     waitingU= int(3000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -1014,7 +983,6 @@ if (testNumber==9 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -1030,7 +998,7 @@ if (testNumber==9 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)
 
 
 
@@ -1038,7 +1006,7 @@ if (testNumber==9 or testNumber==0):
 if (testNumber==10 or testNumber==0):
     waitingL= int(2000 / virtualMachine)
     waitingU= int(4000 / virtualMachine)
-    interMax= int(130 / virtualMachine)
+    interMax= int(400 / virtualMachine)
     onlySolvableInstances=False
     PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
     PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
@@ -1053,7 +1021,6 @@ if (testNumber==10 or testNumber==0):
         simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
         dataSetPartition=Partition,
         instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        instanceGroupSize=[1],
         virtualMachines=virtualMachine,
         maxInterArrival=int(interMax),
         onlySolvable=onlySolvableInstances,
@@ -1069,4 +1036,4 @@ if (testNumber==10 or testNumber==0):
         seed=12345,
         instanceCapTime=3598,
         searchTime = 1,
-        GAPsize = 0.3)
+        GAPsize = 0)

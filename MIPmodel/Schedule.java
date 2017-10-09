@@ -292,11 +292,14 @@ public static void Model1(int []a, int []rt, int []ewt, int C, int searchTime, d
 
 		IloLinearNumExpr Addition = cplex.linearNumExpr();
 
+
 		for(int i=0;i<n;i++) {
-			Addition.addTerm(1, Attended[i]);
+			Addition.addTerm(C, Attended[i]);
+			Addition.addTerm(-rt[i], Attended[i]);
 		}
 
 		cplex.addMaximize(Addition);
+
 
 		if(searchTime!=0){ cplex.setParam(IloCplex.DoubleParam.TiLim, searchTime);}
 		if(searchGap!=0){ cplex.setParam(IloCplex.DoubleParam.EpGap, searchGap); }
@@ -365,7 +368,8 @@ public static void Model2(int []a, int []rt, int []ewt, int C, int searchTime, d
 		IloLinearNumExpr Addition = cplex.linearNumExpr();
 
 		for(int i=0;i<n;i++) {
-			Addition.addTerm(1, Attended[i]);
+			Addition.addTerm(C, Attended[i]);
+			Addition.addTerm(-rt[i], Attended[i]);
 		}
 
 		cplex.addMaximize(Addition);
@@ -548,7 +552,8 @@ public static void Model3(int []a, int []e, int []ewt, int C, int searchTime, do
 		IloLinearNumExpr Addition = cplex.linearNumExpr();
 
 		for(int i=0;i<n;i++) {
-			Addition.addTerm(1, Attended[i]);
+			Addition.addTerm(C, Attended[i]);
+			Addition.addTerm(-e[i], Attended[i]);
 		}
 
 		cplex.addMaximize(Addition);
@@ -728,7 +733,8 @@ public static void Model4(int []a, int []e, int []ewt, int C, int searchTime, do
 		IloLinearNumExpr Addition = cplex.linearNumExpr();
 
 		for(int i=0;i<n;i++) {
-			Addition.addTerm(1, Attended[i]);
+			Addition.addTerm(C, Attended[i]);
+			Addition.addTerm(-e[i], Attended[i]);
 		}
 
 		cplex.addMaximize(Addition);

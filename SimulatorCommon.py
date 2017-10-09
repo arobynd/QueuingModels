@@ -46,6 +46,97 @@ def simulationSummary(data, nVMs, outputLog):
 ##############################
 ##############################
 
+def passValuesFromTo(fromQueue, toQueue):
+    while not fromQueue.empty():
+        instance = fromQueue.get()
+        toQueue.put(instance)
+
+##############################
+##############################
+
+def copyOfQueue(queueByValue):
+    auxQueue1 = Queue.PriorityQueue()
+    auxQueue2 = Queue.PriorityQueue()
+    while not queueByValue.empty():
+        instance = queueByValue.get()
+        auxQueue1.put(instance)
+        auxQueue2.put(instance)
+    passValuesFromTo(auxQueue1,queueByValue)
+    return  auxQueue2
+
+##############################
+##############################
+def printQueueValues(queueByCopy):
+    while not queueByCopy.empty():
+        instance = queueByCopy.get()
+        print instance
+
+##############################
+##############################
+def sortBySJF(queue):
+    finalQueue = Queue.PriorityQueue()
+    while not queue.empty():
+        instance = queue.get()
+        instance.priority = instance.PredictedServiceTime
+        finalQueue.put(instance)
+    return finalQueue
+
+##############################
+##############################
+def firtInstanceRuntime(queueByCopy):
+    if not queueByCopy.empty():
+        instance = queueByCopy.get()
+        return instance.PredictedServiceTime
+    else:
+        return False
+
+##############################
+##############################
+def lastInstanceRuntime(queueByCopy):
+    if not queueByCopy.empty():
+        instance = None
+        while not queueByCopy.empty():
+            instance = queueByCopy.get()
+        return instance.PredictedServiceTime
+    else:
+        return False
+
+##############################
+##############################
+def mergeQueues(queue1ByCopy,queue2ByCopy):
+    finalQueue = Queue.PriorityQueue()
+    while not queue1ByCopy.empty():
+        instance = queue1ByCopy.get()
+        finalQueue.put(instance)
+    while not queue2ByCopy.empty():
+        instance = queue2ByCopy.get()
+        finalQueue.put(instance)
+    return  finalQueue
+
+
+# def updatePrioritiesMIP(queue):
+#     auxQueue = Queue.PriorityQueue()
+#     while not queue.empty():
+#         instance = queue.get()
+#         print instance
+#         auxQueue.put(instance)
+#     passValues(auxQueue,queue)
+
+##############################
+##############################
+
+
+# def printQueueValues(queue):
+#     auxQueue = Queue.PriorityQueue()
+#     while not queue.empty():
+#         instance = queue.get()
+#         print instance
+#         auxQueue.put(instance)
+#     passValues(auxQueue, queue)
+
+##############################
+##############################
+
 
 def getVMwithSmallestEndTime(VMs):
     minimum = VMs[0].nextEndTime
