@@ -645,7 +645,7 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 10 #0 - all tests
+    testNumber = 9 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
     MIPnumber = 1 #0 - all MIP tests
     virtualMachine = 4
@@ -666,9 +666,10 @@ Data = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "(" 
 simDataAVG = pd.read_csv(Data)
 simDataAVG["RealServiceTime"] = np.ceil(10 ** simDataAVG["actual"])
 simDataAVG["RealServiceTime"] = simDataAVG["RealServiceTime"].replace(3598, np.NaN)
-AVG = simDataAVG["RealServiceTime"].mean()
-FASTER = 10
-
+#AVG = simDataAVG["RealServiceTime"].mean()
+#FASTER = 10
+AVG = 32
+FASTER = 1
 
 
 
