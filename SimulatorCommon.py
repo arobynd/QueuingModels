@@ -113,6 +113,7 @@ def mergeQueues(queue1ByCopy,queue2ByCopy):
     while not queue2ByCopy.empty():
         instance = queue2ByCopy.get()
         finalQueue.put(instance)
+    finalQueue = sortBySJF(finalQueue)
     return  finalQueue
 
 
