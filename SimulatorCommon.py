@@ -83,20 +83,22 @@ def sortBySJF(queue):
 
 ##############################
 ##############################
-def firtInstanceRuntime(queueByCopy):
-    if not queueByCopy.empty():
-        instance = queueByCopy.get()
+def smallestInstanceRuntime(queueByCopy):
+    x = sortBySJF(queueByCopy)
+    if not x.empty():
+        instance = x.get()
         return instance.PredictedServiceTime
     else:
         return False
 
 ##############################
 ##############################
-def lastInstanceRuntime(queueByCopy):
-    if not queueByCopy.empty():
+def largestInstanceRuntime(queueByCopy):
+    x = sortBySJF(queueByCopy)
+    if not x.empty():
         instance = None
-        while not queueByCopy.empty():
-            instance = queueByCopy.get()
+        while not x.empty():
+            instance = x.get()
         return instance.PredictedServiceTime
     else:
         return False

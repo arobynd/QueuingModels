@@ -322,7 +322,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, 
                 modifiedFlag = False
                 # Option 1: instances from executionQueue need to continue to run, check if new instances have to be moved to executionQueue
                 if (not arrivingQueue.empty()) and (not executionQueue.empty()):
-                    if firtInstanceRuntime(copyOfQueue(arrivingQueue)) < lastInstanceRuntime(copyOfQueue(executionQueue)):
+                    if smallestInstanceRuntime(copyOfQueue(arrivingQueue)) < largestInstanceRuntime(copyOfQueue(executionQueue)):
                         modifiedFlag = True
                         AuxQueue = mergeQueues(executionQueue, arrivingQueue) #After merging, executionQueue and arrivingQueue become empty because they are sent by reference
                         while (executionQueue.qsize() < k) and (not AuxQueue .empty()):
@@ -449,7 +449,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Que
                 modifiedFlag = False
                 # Option 1: instances from executionQueue need to continue to run, check if new instances have to be moved to executionQueue
                 if (not arrivingQueue.empty()) and (not executionQueue.empty()):
-                    if firtInstanceRuntime(copyOfQueue(arrivingQueue)) < lastInstanceRuntime(copyOfQueue(executionQueue)):
+                    if smallestInstanceRuntime(copyOfQueue(arrivingQueue)) < largestInstanceRuntime(copyOfQueue(executionQueue)):
                         modifiedFlag = True
                         AuxQueue = mergeQueues(executionQueue, arrivingQueue) #After merging, executionQueue and arrivingQueue become empty because they are sent by reference
                         while (executionQueue.qsize() < k) and (not AuxQueue .empty()):
