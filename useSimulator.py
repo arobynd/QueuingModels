@@ -99,7 +99,7 @@ def prepareSimulationData(interArrivalTime, inputFileR, inputFileC, outputFile, 
 ##############################
 
 
-def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=3598, stopWhenQueue=2):
+def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=3598, heuristicH=2):
 
     directory = "SimulationResults/"+dataSetPartition+"/"+simulationResultsDir
     if not os.path.exists(directory):
@@ -235,7 +235,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataAll,
@@ -243,7 +243,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
@@ -251,7 +251,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_R_PredictedServiceTime_CheapFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
@@ -259,7 +259,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_RealServiceTime_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimData,
@@ -267,7 +267,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_PredictedServiceTime_AllFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataAll,
@@ -275,7 +275,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
@@ -283,7 +283,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_PredictedServiceTime_CheapFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
@@ -291,7 +291,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
 
     # #########################################
@@ -303,7 +303,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataAll,
@@ -311,7 +311,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataTrivial,
@@ -319,7 +319,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
@@ -327,7 +327,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_RealServiceTime_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
@@ -335,7 +335,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataAll,
@@ -343,7 +343,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataTrivial,
@@ -351,7 +351,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
     simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
@@ -359,13 +359,13 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
-                             stopWhenQueue=stopWhenQueue)
+                             heuristicH=heuristicH)
 
 ##############################
 ##############################
 
 
-def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0):
 
     directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
     if not os.path.exists(directory):
@@ -390,7 +390,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        searchTime=searchTime,
                                                        GAPsize=GAPsize,
                                                        model="model1",
-                                                       stopWhenQueue=stopWhenQueue,
+                                                       heuristicH=heuristicH,
                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
         if (MIPnumber==0 or MIPnumber == 2):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
@@ -401,7 +401,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        searchTime=searchTime,
                                                        GAPsize=GAPsize,
                                                        model="model2",
-                                                       stopWhenQueue=stopWhenQueue,
+                                                       heuristicH=heuristicH,
                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
             ###
@@ -414,7 +414,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        searchTime=searchTime,
                                                        GAPsize=GAPsize,
                                                        model="model1",
-                                                       stopWhenQueue=stopWhenQueue,
+                                                       heuristicH=heuristicH,
                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
         if (MIPnumber==0 or MIPnumber == 4):
@@ -426,7 +426,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        searchTime=searchTime,
                                                        GAPsize=GAPsize,
                                                        model="model2",
-                                                       stopWhenQueue=stopWhenQueue,
+                                                       heuristicH=heuristicH,
                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
             ###
@@ -439,7 +439,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                         searchTime=searchTime,
                                                         GAPsize=GAPsize,
                                                         model="model1",
-                                                        stopWhenQueue=stopWhenQueue,
+                                                        heuristicH=heuristicH,
                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
         if (MIPnumber==0 or MIPnumber == 6):
@@ -451,7 +451,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                         searchTime=searchTime,
                                                                         GAPsize=GAPsize,
                                                                         model="model2",
-                                                                        stopWhenQueue=stopWhenQueue,
+                                                                        heuristicH=heuristicH,
                                                                         dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
     if (virtualMachines > 1):
@@ -465,7 +465,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      searchTime=searchTime,
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
-                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     heuristicH=heuristicH,
                                                                      dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
         if (MIPnumber == 0 or MIPnumber == 2):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
@@ -476,7 +476,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                                     searchTime=searchTime,
                                                                                     GAPsize=GAPsize,
                                                                                     model="model4",
-                                                                                    stopWhenQueue=stopWhenQueue,
+                                                                                    heuristicH=heuristicH,
                                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
             ###
@@ -489,7 +489,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      searchTime=searchTime,
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
-                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     heuristicH=heuristicH,
                                                                      dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
         if (MIPnumber == 0 or MIPnumber == 4):
@@ -501,7 +501,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                                     searchTime=searchTime,
                                                                                     GAPsize=GAPsize,
                                                                                     model="model4",
-                                                                                    stopWhenQueue=stopWhenQueue,
+                                                                                    heuristicH=heuristicH,
                                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
             ###
@@ -514,7 +514,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      searchTime=searchTime,
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
-                                                                     stopWhenQueue=stopWhenQueue,
+                                                                     heuristicH=heuristicH,
                                                                      dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
         if (MIPnumber == 0 or MIPnumber == 6):
@@ -527,7 +527,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                     searchTime=searchTime,
                                                                     GAPsize=GAPsize,
                                                                     model="model4",
-                                                                    stopWhenQueue=stopWhenQueue,
+                                                                    heuristicH=heuristicH,
                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
 
 
@@ -542,7 +542,7 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
 
 
 def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90", instanceMaximumExpectedWaitingTime=0,
-         virtualMachines=1, maxInterArrival=3600, onlySolvable=False, stopWhenQueue=2,
+         virtualMachines=1, maxInterArrival=3600, onlySolvable=False, heuristicH=2,
          PredictionsInputFileR="", PredictionsInputFileAllR="", PredictionsInputFileTrivialR="",
          PredictionsInputFileCheapR="", PredictionsInputFileC="", PredictionsInputFileAllC="",
          PredictionsInputFileTrivialC="", PredictionsInputFileCheapC="",
@@ -609,7 +609,7 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                               simulationResultsDir=simResultsDir,
                               virtualMachines=virtualMachines,
                               instanceCapTime=instanceCapTime,
-                              stopWhenQueue=stopWhenQueue)
+                              heuristicH=heuristicH)
 
     if (testType == "ALLTESTS" or testType == "MIP"):
         ExecuteMIPSimulations(MIPnumber,
@@ -624,7 +624,7 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                                       BigM=False,
                                       searchTime=searchTime,
                                       GAPsize=GAPsize,
-                                      stopWhenQueue=stopWhenQueue,
+                                      heuristicH=heuristicH,
                                       dequeueWhenNotScheduledMIP=0)
 
 
@@ -632,7 +632,7 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
 
 
 
-####################
+#####Initialize Global parameters
 Partition=""
 instanceType=""
 solver=""
@@ -640,17 +640,26 @@ testNumber=""
 testType  = ""
 MIPnumber = ""
 virtualMachine = ""
+heuristicH = ""
+AverageRuntimeDiv = ""
+searchTime = ""
+GAPsize = ""
 
+
+#####Execute with an IDE or externally from command line
 if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 10 #0 - all tests
+    testNumber = 1 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
     MIPnumber = 1 #0 - all MIP tests
     virtualMachine = 4
+    heuristicH = 2
+    AverageRuntimeDiv = 1
+    searchTime = 1
+    GAPsize = 0
 else:
-    print "parametros", sys.argv[1]
     Partition = str(sys.argv[1])
     instanceType = str(sys.argv[2])
     solver = str(sys.argv[3])
@@ -658,394 +667,92 @@ else:
     testType = str(sys.argv[5]) #POLICY or MIP
     MIPnumber = int(sys.argv[6]) #If the testType is MIP, then a number of test must be provided...so far 1 to 6
     virtualMachine = int(sys.argv[7])
+    heuristicH = int(sys.argv[8])
+    AverageRuntimeDiv = int(sys.argv[9])
+    searchTime = int(sys.argv[10])
+    GAPsize = int(sys.argv[11])
 
 
 
+#### Find average runtime of solvable instances
+Data = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "(" + solver + ")(regression)(predictions)all.csv"
+simDataAverageRuntime = pd.read_csv(Data)
+simDataAverageRuntime["RealServiceTime"] = np.ceil(10 ** simDataAverageRuntime["actual"])
+simDataAverageRuntime["RealServiceTime"] = simDataAverageRuntime["RealServiceTime"].replace(3598, np.NaN)
+AverageRuntime = int(simDataAverageRuntime["RealServiceTime"].mean())
 ####################
-# Data = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "(" + solver + ")(regression)(predictions)all.csv"
-# simDataAVG = pd.read_csv(Data)
-# simDataAVG["RealServiceTime"] = np.ceil(10 ** simDataAVG["actual"])
-# simDataAVG["RealServiceTime"] = simDataAVG["RealServiceTime"].replace(3598, np.NaN)
-# AVG = simDataAVG["RealServiceTime"].mean()
-FASTER = 10
-AVG = 32
-FASTER = 1
-
-
-
+waitingL=""
+waitingU=""
+interMax= int(AverageRuntime / AverageRuntimeDiv)
+onlySolvableInstances=False
 ####################
 if (testNumber==1 or testNumber==0):
-    waitingL=1
-    waitingU= int(300 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
-
+    waitingL= 1
+    waitingU= 30
 ####################
 if (testNumber==2 or testNumber==0):
     waitingL=1
-    waitingU= int(500 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
+    waitingU= 90
 ####################
 if (testNumber==3 or testNumber==0):
     waitingL=1
-    waitingU= int(700 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
-
+    waitingU= 180
 ####################
 if (testNumber==4 or testNumber==0):
     waitingL=1
-    waitingU= int(1000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
+    waitingU= 240
 ####################
 if (testNumber==5 or testNumber==0):
-    waitingL=1
-    waitingU= int(1500 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
+    waitingL= 240
+    waitingU= 480
 ####################
 if (testNumber==6 or testNumber==0):
-    waitingL=1
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
+    waitingL= 240
+    waitingU= 540
 ####################
 if (testNumber==7 or testNumber==0):
-    waitingL= int(1000 / virtualMachine)
-    waitingU= int(2000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
+    waitingL= 240
+    waitingU= 600
 ####################
 if (testNumber==8 or testNumber==0):
-    waitingL= int(1000 / virtualMachine)
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
+    waitingL= 600
+    waitingU= 1200
 ####################
 if (testNumber==9 or testNumber==0):
-    waitingL= int(2000 / virtualMachine)
-    waitingU= int(3000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
-
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
-
-
-
+    waitingL= 600
+    waitingU= 1800
 ####################
 if (testNumber==10 or testNumber==0):
-    waitingL= int(2000 / virtualMachine)
-    waitingU= int(4000 / virtualMachine)
-    interMax= int(AVG / FASTER)
-    onlySolvableInstances=False
-    PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
-    PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
-    PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
-    PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
-    PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
-    PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
+    waitingL= 1200
+    waitingU= 3600
+####################
 
-    Test(testType,MIPnumber,
-        simResultsDir="xVM_"+str(virtualMachine)+"_WaitingTime_"+str(waitingL)+"_"+str(waitingU)+"_interArrival_"+str(interMax)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
-        dataSetPartition=Partition,
-        instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
-        virtualMachines=virtualMachine,
-        maxInterArrival=int(interMax),
-        onlySolvable=onlySolvableInstances,
-        stopWhenQueue=2,
-        PredictionsInputFileR=PredictionsInputFileR,
-        PredictionsInputFileAllR = PredictionsInputFileAllR,
-        PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
-        PredictionsInputFileCheapR = PredictionsInputFileCheapR,
-        PredictionsInputFileC = PredictionsInputFileC,
-        PredictionsInputFileAllC = PredictionsInputFileAllC,
-        PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
-        PredictionsInputFileCheapC = PredictionsInputFileCheapC,
-        seed=12345,
-        instanceCapTime=3598,
-        searchTime = 1,
-        GAPsize = 0)
+PredictionsInputFileR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
+PredictionsInputFileAllR = "../myTrainedModelsAndResults/" + Partition + "/1." + instanceType + "("+solver+")(regression)(predictions)all.csv"
+PredictionsInputFileTrivialR = "../myTrainedModelsAndResults/" + Partition + "/2." + instanceType + "("+solver+")(regression)(predictions)trivial.csv"
+PredictionsInputFileCheapR = "../myTrainedModelsAndResults/" + Partition + "/3." + instanceType + "("+solver+")(regression)(predictions)cheap.csv"
+PredictionsInputFileC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
+PredictionsInputFileAllC = "../myTrainedModelsAndResults/" + Partition + "/4." + instanceType + "("+solver+")(classification)(predictions)all.csv"
+PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5." + instanceType + "("+solver+")(classification)(predictions)trivial.csv"
+PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
+
+Test(testType,MIPnumber,
+    simResultsDir="xVM_"+str(virtualMachine)+"_WT_"+str(waitingL)+"_"+str(waitingU)+"_interArr_"+str(interMax)+"__AvgRT_"+str(AverageRuntime)+"_Div_"+str(AverageRuntimeDiv)+"_H_"+str(heuristicH)+"_searchT_"+str(searchTime)+"_Gap_"+str(GAPsize)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
+    dataSetPartition=Partition,
+    instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
+    virtualMachines=virtualMachine,
+    maxInterArrival=int(interMax),
+    onlySolvable=onlySolvableInstances,
+    heuristicH=heuristicH,
+    PredictionsInputFileR=PredictionsInputFileR,
+    PredictionsInputFileAllR = PredictionsInputFileAllR,
+    PredictionsInputFileTrivialR = PredictionsInputFileTrivialR,
+    PredictionsInputFileCheapR = PredictionsInputFileCheapR,
+    PredictionsInputFileC = PredictionsInputFileC,
+    PredictionsInputFileAllC = PredictionsInputFileAllC,
+    PredictionsInputFileTrivialC = PredictionsInputFileTrivialC,
+    PredictionsInputFileCheapC = PredictionsInputFileCheapC,
+    seed=12345,
+    instanceCapTime=3598,
+    searchTime = searchTime,
+    GAPsize = GAPsize)

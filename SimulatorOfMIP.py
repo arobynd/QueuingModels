@@ -38,7 +38,7 @@ import numpy as np
 ##############################
 ##############################
 
-def HeuristicEvaluateContinueToExecuteMIP_1Queue(queue, simData, VMs, ArrivingInstanceTime, instanceCapTime, stopWhenQueue, useClassification = False):
+def HeuristicEvaluateContinueToExecuteMIP_1Queue(queue, simData, VMs, ArrivingInstanceTime, instanceCapTime, heuristicH, useClassification = False):
     vmID = getVMwithSmallestEndTime(VMs)
     auxQueue = Queue.PriorityQueue()
 
@@ -50,7 +50,7 @@ def HeuristicEvaluateContinueToExecuteMIP_1Queue(queue, simData, VMs, ArrivingIn
             counter = counter + 1
 
     queue = auxQueue
-    if counter>= stopWhenQueue:
+    if counter>= heuristicH:
         OldInstanceID = VMs[vmID].processingInstanceID
         # If the instance is being attended, then it can be stopped, otherwise the end time could be smaller than the start time
         if (simData.loc[OldInstanceID, "TimeServiceEnds"] != simData.loc[OldInstanceID, "TimeServiceBegins"]) and (ArrivingInstanceTime >=simData.loc[OldInstanceID, "TimeServiceBegins"]):
@@ -97,7 +97,7 @@ def HeuristicEvaluateContinueToExecuteMIP_1Queue(queue, simData, VMs, ArrivingIn
 
 
 
-def HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue, simData, VMs, ArrivingInstanceTime, instanceCapTime, stopWhenQueue, useClassification = False):
+def HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue, simData, VMs, ArrivingInstanceTime, instanceCapTime, heuristicH, useClassification = False):
 
     vmID = getVMwithSmallestEndTime(VMs)
     totalQueue = mergeQueues(copyOfQueue(arrivingQueue),copyOfQueue(executionQueue))
@@ -108,7 +108,7 @@ def HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue,
             counter = counter + 1
 
 
-    if counter>= stopWhenQueue:
+    if counter>= heuristicH:
         OldInstanceID = VMs[vmID].processingInstanceID
         # If the instance is being attended, then it can be stopped, otherwise the end time could be smaller than the start time
         if (simData.loc[OldInstanceID, "TimeServiceEnds"] != simData.loc[OldInstanceID, "TimeServiceBegins"]) and (ArrivingInstanceTime >=simData.loc[OldInstanceID, "TimeServiceBegins"]):
@@ -285,7 +285,7 @@ def findLastMIPRunTime(outputFile):
 ##############################
 ##############################
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
     simData = pd.read_csv(inputData, index_col=0)
     arrivingQueue = Queue.PriorityQueue()
     executionQueue = Queue.PriorityQueue()
@@ -366,7 +366,8 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, 
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             arrivingQueue.put(ArrivingInstance)
-            HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue,simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification = False)
+            if heuristicH > 0:
+                HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue,simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH, useClassification = False)
         else:
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
 
@@ -412,7 +413,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, 
 ##############################
 
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
     simData = pd.read_csv(inputData, index_col=0)
     arrivingQueue = Queue.PriorityQueue()
     executionQueue = Queue.PriorityQueue()
@@ -492,7 +493,8 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Que
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime: # and (ArrivingInstance.PredictedSolvable != 0):
             arrivingQueue.put(ArrivingInstance)
-            HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue, simData, VMs,ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue,useClassification=False)
+            if heuristicH > 0:
+                HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue, simData, VMs,ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH,useClassification=False)
         elif (ArrivingInstance.PredictedSolvable != 0):
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:
@@ -534,7 +536,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Que
 ##############################
 ##############################
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
     simData = pd.read_csv(inputData, index_col=0)
     q = Queue.PriorityQueue()
     simData["MIPAttended"]=-1
@@ -571,7 +573,8 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, o
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
-            q = HeuristicEvaluateContinueToExecuteMIP_1Queue(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification = False)
+            if heuristicH > 0:
+                q = HeuristicEvaluateContinueToExecuteMIP_1Queue(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH, useClassification = False)
         else:
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         simData.to_csv(outputFile)
@@ -607,7 +610,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, o
 ##############################
 
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_1Queue(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", stopWhenQueue=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_1Queue(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
     simData = pd.read_csv(inputData, index_col=0)
     q = Queue.PriorityQueue()
     simData["MIPAttended"]=-1
@@ -642,7 +645,8 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_1Que
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime: # and (ArrivingInstance.PredictedSolvable != 0):
             q.put(ArrivingInstance)
-            q = HeuristicEvaluateContinueToExecuteMIP_1Queue(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification = True)
+            if heuristicH > 0:
+                q = HeuristicEvaluateContinueToExecuteMIP_1Queue(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH, useClassification = True)
         elif (ArrivingInstance.PredictedSolvable != 0):
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:

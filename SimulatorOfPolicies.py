@@ -11,7 +11,7 @@ import numpy as np
 ##############################
 ##############################
 
-def HeuristicEvaluateContinueToExecute(queue, simData, VMs, ArrivingInstanceTime, instanceCapTime, stopWhenQueue, useClassification = False):
+def HeuristicEvaluateContinueToExecute(queue, simData, VMs, ArrivingInstanceTime, instanceCapTime, heuristicH, useClassification = False):
     vmID = getVMwithSmallestEndTime(VMs)
     auxQueue = Queue.PriorityQueue()
 
@@ -23,7 +23,7 @@ def HeuristicEvaluateContinueToExecute(queue, simData, VMs, ArrivingInstanceTime
             counter = counter + 1
 
     queue = auxQueue
-    if counter>= stopWhenQueue:
+    if counter>= heuristicH:
         OldInstanceID = VMs[vmID].processingInstanceID
         # If the instance is being attended, then it can be stopped, otherwise the end time could be smaller than the start time
         if (simData.loc[OldInstanceID, "TimeServiceEnds"] != simData.loc[OldInstanceID, "TimeServiceBegins"]) and (ArrivingInstanceTime >= simData.loc[OldInstanceID, "TimeServiceBegins"]):
@@ -179,7 +179,7 @@ def simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData, 
 ##############################
 
 
-def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, stopWhenQueue=2):
+def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, heuristicH=2):
     simData = pd.read_csv(inputData, index_col=0)
     simData["Stopped"] = 0
     simData["QueuedInstances"] = 0
@@ -206,7 +206,8 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
-            q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification=False)
+            if heuristicH > 0:
+                q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH, useClassification=False)
         else:
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
 
@@ -232,7 +233,7 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression(inputData, outputFile,
 
 ##############################
 ##############################
-def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, stopWhenQueue=2):
+def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, heuristicH=2):
     simData = pd.read_csv(inputData, index_col=0)
     simData["Stopped"] = 0
     simData["QueuedInstances"] = 0
@@ -257,7 +258,8 @@ def simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputDa
         vmID = getVMwithSmallestEndTime(VMs)
         if VMs[vmID].nextEndTime >= ArrivingInstance.ArrivalTime:
             q.put(ArrivingInstance)
-            q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, stopWhenQueue, useClassification=True)
+            if heuristicH > 0:
+                q = HeuristicEvaluateContinueToExecute(q, simData, VMs, ArrivingInstance.ArrivalTime, instanceCapTime, heuristicH, useClassification=True)
         elif (ArrivingInstance.PredictedSolvable != 0):
             VMs = beginToProcessInstanceSystemIsIDLE(VMs, vmID, ArrivingInstance, simData, instanceCapTime)
         else:
