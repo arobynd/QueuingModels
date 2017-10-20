@@ -1,0 +1,12 @@
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+502,33304,33327,33829,23,1,1
+3598,33325,33830,33830,505,0,1
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+663,35045,35069,35732,24,1,1
+3598,35026,35053,35053,27,0,1
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+16,36553,36573,36589,20,1,1
+3598,36552,36565,36565,13,0,1
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+3,43866,43879,43882,13,1,1
+4,43873,43896,43900,23,1,1

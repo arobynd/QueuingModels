@@ -1,0 +1,631 @@
+instanceArrivalTimesCSV: 741,726
+instanceRunTimesCSV: 1,955
+instanceMaximumExpectedWaitingTimeCSV: 62,70
+nextEndTimeCSV: 774
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.01 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     6240.0000     4                   6240.0000        0         
+*     0+    0                            0.0000     6240.0000              --- 
+*     0+    0                         6240.0000     6240.0000             0.00%
+      0     0        cutoff           6240.0000     6240.0000        0    0.00%
+Elapsed time = 0.03 sec. (0.15 ticks, tree = 0.00 MB, solutions = 2)
+
+Root node processing (before b&c):
+  Real time             =    0.03 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.03 sec. (0.15 ticks)
+
+Obj=6240.0
+Best Relaxation Obj=6240.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+1,741,775,776,34,1,1
+955,726,796,1751,70,1,1
+instanceArrivalTimesCSV: 776,726
+instanceRunTimesCSV: 116,955
+instanceMaximumExpectedWaitingTimeCSV: 36,70
+nextEndTimeCSV: 776
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     6125.0000     4                   6125.0000        0         
+*     0+    0                            0.0000     6125.0000              --- 
+      0     2     6125.0000     4        0.0000     6125.0000        0     --- 
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 1)
+*     2     2      integral     0     3482.0000     6125.0000        1   75.90%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.01 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.16 ticks)
+
+Obj=3482.0
+Best Relaxation Obj=3482.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+116,776,777,893,1,1,1
+955,726,894,894,168,0,1
+instanceArrivalTimesCSV: 782,726
+instanceRunTimesCSV: 1,955
+instanceMaximumExpectedWaitingTimeCSV: 27,70
+nextEndTimeCSV: 793
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     6240.0000     4                   6240.0000        0         
+*     0+    0                            0.0000     6240.0000              --- 
+*     0+    0                         6240.0000     6240.0000             0.00%
+      0     0        cutoff           6240.0000     6240.0000        0    0.00%
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 2)
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.15 ticks)
+
+Obj=6240.0
+Best Relaxation Obj=6240.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+1,782,794,795,12,1,1
+955,726,796,1751,70,1,1
+instanceArrivalTimesCSV: 1076,1038
+instanceRunTimesCSV: 24,40
+instanceMaximumExpectedWaitingTimeCSV: 71,54
+nextEndTimeCSV: 1090
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.01 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     7132.0000     4                   7132.0000        0         
+*     0+    0                            0.0000     7132.0000              --- 
+*     0+    0                         7132.0000     7132.0000             0.00%
+      0     0        cutoff           7132.0000     7132.0000        0    0.00%
+Elapsed time = 0.02 sec. (0.15 ticks, tree = 0.00 MB, solutions = 2)
+
+Root node processing (before b&c):
+  Real time             =    0.02 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.02 sec. (0.15 ticks)
+
+Obj=7132.0
+Best Relaxation Obj=7132.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+24,1076,1147,1171,71,1,1
+40,1038,1091,1131,53,1,1
+instanceArrivalTimesCSV: 4987,4952,5007
+instanceRunTimesCSV: 44,3207,3590
+instanceMaximumExpectedWaitingTimeCSV: 51,67,66
+nextEndTimeCSV: 5007
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 12 rows and 6 columns.
+MIP Presolve modified 6 coefficients.
+Aggregator did 15 substitutions.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 18 indicators.
+Presolve time = 0.00 sec. (0.07 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 18 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Clique table members: 6.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     3953.0000    12                   3953.0000        0         
+*     0+    0                            0.0000     3953.0000              --- 
+      0     2     3953.0000    12        0.0000     3953.0000        0     --- 
+Elapsed time = 0.01 sec. (0.36 ticks, tree = 0.00 MB, solutions = 1)
+*     6     6      integral     0     3554.0000     3953.0000        5   11.23%
+*    10+    2                         3562.0000     3953.0000            10.98%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.36 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.09 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.45 ticks)
+
+Obj=3562.0
+Best Relaxation Obj=3562.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+44,4987,5008,5052,21,1,1
+3207,4952,8644,8644,3692,0,1
+3590,5007,5053,8643,46,1,1
+instanceArrivalTimesCSV: 5050,5116,5102
+instanceRunTimesCSV: 3590,3590,3590
+instanceMaximumExpectedWaitingTimeCSV: 86,69,35
+nextEndTimeCSV: 5117
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 12 rows and 6 columns.
+MIP Presolve modified 6 coefficients.
+Aggregator did 15 substitutions.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 18 indicators.
+Presolve time = 0.00 sec. (0.07 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 18 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Clique table members: 6.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0       24.0000    12                     24.0000        0         
+*     0+    0                            0.0000       24.0000              --- 
+      0     2       24.0000    12        0.0000       24.0000        0     --- 
+Elapsed time = 0.01 sec. (0.36 ticks, tree = 0.00 MB, solutions = 1)
+*     6     6      integral     0        8.0000       24.0000        3  200.00%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.36 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.06 ticks)
+                          ------------
+Total (root+branch&cut) =    0.02 sec. (0.42 ticks)
+
+Obj=8.0
+Best Relaxation Obj=8.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+3590,5050,5118,8708,68,1,1
+3590,5116,8710,8710,3594,0,1
+3590,5102,8709,8709,3607,0,1
+instanceArrivalTimesCSV: 8713,8679
+instanceRunTimesCSV: 3590,3590
+instanceMaximumExpectedWaitingTimeCSV: 86,84
+nextEndTimeCSV: 8716
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0       16.0000     4                     16.0000        0         
+*     0+    0                            0.0000       16.0000              --- 
+      0     2       16.0000     4        0.0000       16.0000        0     --- 
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 1)
+*     2     2      integral     0        8.0000       16.0000        1  100.00%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.01 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.16 ticks)
+
+Obj=8.0
+Best Relaxation Obj=8.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+3590,8713,8717,12307,4,1,1
+3590,8679,12308,12308,3629,0,1
+instanceArrivalTimesCSV: 15239,15187,15242
+instanceRunTimesCSV: 1,1,1795
+instanceMaximumExpectedWaitingTimeCSV: 52,72,26
+nextEndTimeCSV: 15258
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 12 rows and 6 columns.
+MIP Presolve modified 6 coefficients.
+Aggregator did 15 substitutions.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.07 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Clique table members: 6.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     8997.0000    12                   8997.0000        0         
+*     0+    0                            0.0000     8997.0000              --- 
+*     0+    0                         8997.0000     8997.0000             0.00%
+      0     0        cutoff           8997.0000     8997.0000        0    0.00%
+Elapsed time = 0.01 sec. (0.36 ticks, tree = 0.00 MB, solutions = 2)
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.36 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.36 ticks)
+
+Obj=8997.0
+Best Relaxation Obj=8997.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+1,15239,15261,15262,22,1,1
+1,15187,15259,15260,72,1,1
+1795,15242,15263,17058,21,1,1
+instanceArrivalTimesCSV: 18845,18823
+instanceRunTimesCSV: 12,305
+instanceMaximumExpectedWaitingTimeCSV: 40,68
+nextEndTimeCSV: 18860
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     6879.0000     4                   6879.0000        0         
+*     0+    0                            0.0000     6879.0000              --- 
+*     0+    0                         6879.0000     6879.0000             0.00%
+      0     0        cutoff           6879.0000     6879.0000        0    0.00%
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 2)
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.15 ticks)
+
+Obj=6879.0
+Best Relaxation Obj=6879.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+12,18845,18861,18873,16,1,1
+305,18823,18891,19196,68,1,1
+instanceArrivalTimesCSV: 19163,19190,19133
+instanceRunTimesCSV: 1,298,707
+instanceMaximumExpectedWaitingTimeCSV: 85,41,80
+nextEndTimeCSV: 19206
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 12 rows and 6 columns.
+MIP Presolve modified 6 coefficients.
+Aggregator did 15 substitutions.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.07 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Clique table members: 6.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     9788.0000    12                   9788.0000        0         
+*     0+    0                            0.0000     9788.0000              --- 
+      0     2     9788.0000    12        0.0000     9788.0000        0     --- 
+Elapsed time = 0.01 sec. (0.36 ticks, tree = 0.00 MB, solutions = 1)
+*     5     3      integral     0     6897.0000     9788.0000        3   41.92%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.36 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.03 ticks)
+                          ------------
+Total (root+branch&cut) =    0.02 sec. (0.39 ticks)
+
+Obj=6897.0
+Best Relaxation Obj=6897.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+1,19163,19207,19208,44,1,1
+298,19190,19209,19507,19,1,1
+707,19133,19508,19508,375,0,1
+instanceArrivalTimesCSV: 19382,19383
+instanceRunTimesCSV: 44,109
+instanceMaximumExpectedWaitingTimeCSV: 65,53
+nextEndTimeCSV: 19430
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 7 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     7043.0000     4                   7043.0000        0         
+*     0+    0                            0.0000     7043.0000              --- 
+      0     2     7043.0000     4        0.0000     7043.0000        0     --- 
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 1)
+*     2     2      integral     0     3554.0000     7043.0000        1   98.17%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.01 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.16 ticks)
+
+Obj=3554.0
+Best Relaxation Obj=3554.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+44,19382,19431,19475,49,1,1
+109,19383,19476,19476,93,0,1
+instanceArrivalTimesCSV: 19701,19661
+instanceRunTimesCSV: 78,78
+instanceMaximumExpectedWaitingTimeCSV: 68,63
+nextEndTimeCSV: 19707
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 6 rows and 2 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 6 rows, 10 columns, and 16 nonzeros.
+Reduced MIP has 6 binaries, 2 generals, 0 SOSs, and 8 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     7040.0000     4                   7040.0000        0         
+*     0+    0                            0.0000     7040.0000              --- 
+      0     2     7040.0000     4        0.0000     7040.0000        0     --- 
+Elapsed time = 0.01 sec. (0.15 ticks, tree = 0.00 MB, solutions = 1)
+*     2     2      integral     0     3520.0000     7040.0000        1  100.00%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.15 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.01 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.16 ticks)
+
+Obj=3520.0
+Best Relaxation Obj=3520.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+78,19701,19708,19786,7,1,1
+78,19661,19787,19787,126,0,1
+instanceArrivalTimesCSV: 23284,23268,23315
+instanceRunTimesCSV: 5,36,100
+instanceMaximumExpectedWaitingTimeCSV: 34,76,38
+nextEndTimeCSV: 23317
+machines: 1
+Model 1
+Tried aggregator 2 times.
+MIP Presolve eliminated 12 rows and 6 columns.
+MIP Presolve modified 6 coefficients.
+Aggregator did 15 substitutions.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.07 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 15 rows, 24 columns, and 42 nonzeros.
+Reduced MIP has 15 binaries, 3 generals, 0 SOSs, and 17 indicators.
+Presolve time = 0.00 sec. (0.03 ticks)
+Probing time = 0.00 sec. (0.01 ticks)
+Clique table members: 6.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0    10653.0000    12                  10653.0000        0         
+*     0+    0                            0.0000    10653.0000              --- 
+      0     2    10653.0000    12        0.0000    10653.0000        0     --- 
+Elapsed time = 0.01 sec. (0.35 ticks, tree = 0.00 MB, solutions = 1)
+*     5     5      integral     0     7091.0000    10653.0000        2   50.23%
+*     9     0      integral     0     7155.0000     7155.0000        3    0.00%
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.35 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.05 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.40 ticks)
+
+Obj=7155.0
+Best Relaxation Obj=7155.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+5,23284,23318,23323,34,1,1
+36,23268,23324,23360,56,1,1
+100,23315,23361,23361,46,0,1

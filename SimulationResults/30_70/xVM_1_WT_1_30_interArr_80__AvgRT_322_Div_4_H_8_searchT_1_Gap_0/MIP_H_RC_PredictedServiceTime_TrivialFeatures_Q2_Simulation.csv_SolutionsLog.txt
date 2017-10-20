@@ -1,0 +1,53 @@
+instanceArrivalTimesCSV: 33304,33325
+instanceRunTimesCSV: 308,1711
+instanceMaximumExpectedWaitingTimeCSV: 25,16
+nextEndTimeCSV: 33326
+machines: 1
+Model 2
+Tried aggregator 2 times.
+MIP Presolve eliminated 17 rows and 5 columns.
+MIP Presolve modified 2 coefficients.
+Aggregator did 8 substitutions.
+Reduced MIP has 6 rows, 9 columns, and 15 nonzeros.
+Reduced MIP has 5 binaries, 2 generals, 0 SOSs, and 6 indicators.
+Presolve time = 0.00 sec. (0.04 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+MIP Presolve eliminated 1 rows and 0 columns.
+Reduced MIP has 5 rows, 9 columns, and 13 nonzeros.
+Reduced MIP has 5 binaries, 2 generals, 0 SOSs, and 6 indicators.
+Presolve time = 0.00 sec. (0.02 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 2.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: none, using 1 thread.
+Root relaxation solution time = 0.00 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+      0     0     3290.0000     4                   3290.0000        0         
+      0     0     3290.0000     3                 Impl Bds: 1        1         
+      0     0     3290.0000     3                 Impl Bds: 1        2         
+*     0+    0                            0.0000     3290.0000              --- 
+*     0+    0                         3290.0000     3290.0000             0.00%
+      0     0        cutoff           3290.0000     3290.0000        2    0.00%
+Elapsed time = 0.01 sec. (0.20 ticks, tree = 0.00 MB, solutions = 2)
+
+Implied bound cuts applied:  2
+
+Root node processing (before b&c):
+  Real time             =    0.01 sec. (0.20 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.01 sec. (0.20 ticks)
+
+Obj=3290.0
+Best Relaxation Obj=3290.0
+GAP=0.0
+
+PredictedServiceTime,ArrivalTime,MIPPredictedTimeServiceBegins,MIPPredictedTimeServiceEnds,MIPWaitingTimeInQueue,MIPAttended,MIPVM
+308,33304,33327,33635,23,1,1
+1711,33325,33636,33636,311,0,1
