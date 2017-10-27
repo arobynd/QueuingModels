@@ -285,11 +285,11 @@ def findLastMIPRunTime(outputFile):
 ##############################
 ##############################
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
     simData = pd.read_csv(inputData, index_col=0)
     arrivingQueue = Queue.PriorityQueue()
     executionQueue = Queue.PriorityQueue()
-    k=4 #Maximum size of the executionQueue
+    k=KqueueSize #Maximum size of the executionQueue
 
     simData["MIPAttended"]=-1
     simData["Stopped"] = 0
@@ -413,11 +413,11 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, 
 ##############################
 
 
-def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
+def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
     simData = pd.read_csv(inputData, index_col=0)
     arrivingQueue = Queue.PriorityQueue()
     executionQueue = Queue.PriorityQueue()
-    k=4 #Maximum size of the executionQueue
+    k=KqueueSize #Maximum size of the executionQueue
 
     simData["MIPAttended"]=-1
     simData["Stopped"] = 0

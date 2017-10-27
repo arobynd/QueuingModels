@@ -25,7 +25,7 @@ def createDefaultVMs(n):
 ##############################
 ##############################
 
-def prepareSimulationData(interArrivalTime, inputFileR, inputFileC, outputFile, Rseed, predictionType, instanceMaximumExpectedWaitingTime, instanceCapTime, onlySolvable=False):
+def prepareSimulationData(interArrivalTime, inputFileR, inputFileC, outputFile, Rseed, predictionType, instanceMaximumExpectedWaitingTime, instanceCapTime, onlySolvable=False, RandomOrder = 0):
 
     np.random.seed(Rseed)
 
@@ -66,10 +66,17 @@ def prepareSimulationData(interArrivalTime, inputFileR, inputFileC, outputFile, 
 
 
     finalSimData=finalSimData.reset_index(drop=True)
+
+    if RandomOrder != 0:
+        finalSimData = finalSimData.sample(frac=1, random_state=RandomOrder)
+        finalSimData = finalSimData.reset_index(drop=True)
+
+
     finalSimData.loc[0, "interArrivalTime"] = 1
     finalSimData.loc[0, "ArrivalTime"] = 1
     for i in range(1, finalSimData.shape[0]):
         finalSimData.loc[i, "ArrivalTime"] = finalSimData.loc[i - 1, "ArrivalTime"] + finalSimData.loc[i, "interArrivalTime"]
+
     finalSimData.to_csv(outputFile)
 
     return finalSimData
@@ -365,7 +372,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
 ##############################
 
 
-def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0):
+def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
 
     directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
     if not os.path.exists(directory):
@@ -391,7 +398,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        GAPsize=GAPsize,
                                                        model="model1",
                                                        heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
         if (MIPnumber==0 or MIPnumber == 2):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
                                                        outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_Q2_Simulation.csv",
@@ -402,7 +410,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        GAPsize=GAPsize,
                                                        model="model2",
                                                        heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
 
             ###
         if (MIPnumber==0 or MIPnumber == 3):
@@ -415,7 +424,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        GAPsize=GAPsize,
                                                        model="model1",
                                                        heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
 
         if (MIPnumber==0 or MIPnumber == 4):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
@@ -427,7 +437,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                        GAPsize=GAPsize,
                                                        model="model2",
                                                        heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
 
             ###
         if (MIPnumber==0 or MIPnumber == 5):
@@ -440,7 +451,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                         GAPsize=GAPsize,
                                                         model="model1",
                                                         heuristicH=heuristicH,
-                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                        KqueueSize = KqueueSize)
 
         if (MIPnumber==0 or MIPnumber == 6):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues( inputData=SimDataTrivial,
@@ -452,7 +464,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                         GAPsize=GAPsize,
                                                                         model="model2",
                                                                         heuristicH=heuristicH,
-                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                        KqueueSize=KqueueSize)
 
     if (virtualMachines > 1):
 
@@ -466,7 +479,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
                                                                      heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
         if (MIPnumber == 0 or MIPnumber == 2):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
                                                                                     outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_Q2_Simulation.csv",
@@ -477,7 +491,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                                     GAPsize=GAPsize,
                                                                                     model="model4",
                                                                                     heuristicH=heuristicH,
-                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
 
             ###
         if (MIPnumber == 0 or MIPnumber == 3):
@@ -490,7 +505,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
                                                                      heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
 
         if (MIPnumber == 0 or MIPnumber == 4):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
@@ -502,7 +518,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                                     GAPsize=GAPsize,
                                                                                     model="model4",
                                                                                     heuristicH=heuristicH,
-                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
 
             ###
         if (MIPnumber == 0 or MIPnumber == 5):
@@ -515,7 +532,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                      GAPsize=GAPsize,
                                                                      model="model3",
                                                                      heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
 
         if (MIPnumber == 0 or MIPnumber == 6):
             MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(
@@ -528,7 +546,8 @@ def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTr
                                                                     GAPsize=GAPsize,
                                                                     model="model4",
                                                                     heuristicH=heuristicH,
-                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP)
+                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                    KqueueSize=KqueueSize)
 
 
 ############################################################
@@ -546,7 +565,7 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
          PredictionsInputFileR="", PredictionsInputFileAllR="", PredictionsInputFileTrivialR="",
          PredictionsInputFileCheapR="", PredictionsInputFileC="", PredictionsInputFileAllC="",
          PredictionsInputFileTrivialC="", PredictionsInputFileCheapC="",
-         seed=12345, instanceCapTime=3598, searchTime=60, GAPsize=0):
+         seed=12345, instanceCapTime=3598, searchTime=60, GAPsize=0, KqueueSize = 4, RandomOrder = 0):
 
 
 
@@ -568,7 +587,8 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                           predictionType="RealServiceTime",
                           instanceMaximumExpectedWaitingTime=instanceMaximumExpectedWaitingTime,
                           instanceCapTime=instanceCapTime,
-                          onlySolvable=onlySolvable)
+                          onlySolvable=onlySolvable,
+                          RandomOrder = RandomOrder)
 
     prepareSimulationData(interArrivalTime=range(1, maxInterArrival),
                           inputFileR=PredictionsInputFileAllR,
@@ -578,7 +598,8 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                           predictionType="PredictedServiceTime",
                           instanceMaximumExpectedWaitingTime=instanceMaximumExpectedWaitingTime,
                           instanceCapTime=instanceCapTime,
-                          onlySolvable=onlySolvable)
+                          onlySolvable=onlySolvable,
+                          RandomOrder=RandomOrder)
 
     prepareSimulationData(interArrivalTime=range(1, maxInterArrival),
                           inputFileR=PredictionsInputFileTrivialR,
@@ -588,7 +609,8 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                           predictionType="PredictedServiceTime",
                           instanceMaximumExpectedWaitingTime=instanceMaximumExpectedWaitingTime,
                           instanceCapTime=instanceCapTime,
-                          onlySolvable=onlySolvable)
+                          onlySolvable=onlySolvable,
+                          RandomOrder=RandomOrder)
 
     prepareSimulationData(interArrivalTime=range(1, maxInterArrival),
                           inputFileR=PredictionsInputFileCheapR,
@@ -598,7 +620,8 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                           predictionType="PredictedServiceTime",
                           instanceMaximumExpectedWaitingTime=instanceMaximumExpectedWaitingTime,
                           instanceCapTime=instanceCapTime,
-                          onlySolvable=onlySolvable)
+                          onlySolvable=onlySolvable,
+                          RandomOrder=RandomOrder)
 
     if(testType=="ALLTESTS" or testType=="POLICY"):
         ExecutePolicySimulations(SimData = SimData ,
@@ -625,7 +648,8 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                                       searchTime=searchTime,
                                       GAPsize=GAPsize,
                                       heuristicH=heuristicH,
-                                      dequeueWhenNotScheduledMIP=0)
+                                      dequeueWhenNotScheduledMIP=0,
+                                      KqueueSize=KqueueSize)
 
 
 
@@ -659,6 +683,8 @@ if(len(sys.argv)==1):
     AverageRuntimeDiv = 1
     searchTime = 1
     GAPsize = 0
+    KqueueSize = 5 #Queue size for MIP_SJF hybrid approach
+    RandomOrder = 1#Random ordering
 else:
     Partition = str(sys.argv[1])
     instanceType = str(sys.argv[2])
@@ -671,6 +697,8 @@ else:
     AverageRuntimeDiv = int(sys.argv[9])
     searchTime = int(sys.argv[10])
     GAPsize = int(sys.argv[11])
+    KqueueSize = int(sys.argv[12])
+    RandomOrder = int(sys.argv[13])
 
 
 
@@ -737,7 +765,7 @@ PredictionsInputFileTrivialC = "../myTrainedModelsAndResults/" + Partition + "/5
 PredictionsInputFileCheapC = "../myTrainedModelsAndResults/" + Partition + "/6." + instanceType + "("+solver+")(classification)(predictions)cheap.csv"
 
 Test(testType,MIPnumber,
-    simResultsDir="xVM_"+str(virtualMachine)+"_WT_"+str(waitingL)+"_"+str(waitingU)+"_interArr_"+str(interMax)+"__AvgRT_"+str(AverageRuntime)+"_Div_"+str(AverageRuntimeDiv)+"_H_"+str(heuristicH)+"_searchT_"+str(searchTime)+"_Gap_"+str(GAPsize)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
+    simResultsDir="xVM_"+str(virtualMachine)+"_WT_"+str(waitingL)+"_"+str(waitingU)+"_interArr_"+str(interMax)+"__AvgRT_"+str(AverageRuntime)+"_Div_"+str(AverageRuntimeDiv)+"_H_"+str(heuristicH)+"_searchT_"+str(searchTime)+"_Gap_"+str(GAPsize)+"_K_"+str(KqueueSize)+"_Rand_"+str(RandomOrder)+"_"+datetime.now().strftime('#%Y_%m_%d_%H_%M_%S'),
     dataSetPartition=Partition,
     instanceMaximumExpectedWaitingTime=range(waitingL,waitingU),
     virtualMachines=virtualMachine,
@@ -755,4 +783,6 @@ Test(testType,MIPnumber,
     seed=12345,
     instanceCapTime=3598,
     searchTime = searchTime,
-    GAPsize = GAPsize)
+    GAPsize = GAPsize,
+    KqueueSize = KqueueSize,
+    RandomOrder = RandomOrder)
