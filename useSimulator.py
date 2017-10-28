@@ -367,12 +367,192 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
                              heuristicH=heuristicH)
+##############################
+##############################
+
+
+def ExecuteMIPSimulations3Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
+
+    directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    H2=""
+    if(dequeueWhenNotScheduledMIP):
+        H2="_H"+str(dequeueWhenNotScheduledMIP)
+
+
+    #########################################
+    # HEURISTIC STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
+    #########################################
+    if (virtualMachines==1):
+
+        if (MIPnumber==0 or MIPnumber==1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_RealServiceTime_Q3_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+        if (MIPnumber==0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_Q3_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber==0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_CheapFeatures_Q3_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+        if (MIPnumber==0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_CheapFeatures_Q3_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber==0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimDataTrivial,
+                                                        outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_TrivialFeatures_Q3_Simulation.csv",
+                                                        VMs=createDefaultVMs(virtualMachines),
+                                                        schedulingPolicy="MIP",
+                                                        instanceCapTime=instanceCapTime,
+                                                        searchTime=searchTime,
+                                                        GAPsize=GAPsize,
+                                                        model="model1",
+                                                        heuristicH=heuristicH,
+                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                        KqueueSize = KqueueSize)
+
+        if (MIPnumber==0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues( inputData=SimDataTrivial,
+                                                                        outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_TrivialFeatures_Q3_Simulation.csv",
+                                                                        VMs=createDefaultVMs(virtualMachines),
+                                                                        schedulingPolicy="MIP",
+                                                                        instanceCapTime=instanceCapTime,
+                                                                        searchTime=searchTime,
+                                                                        GAPsize=GAPsize,
+                                                                        model="model2",
+                                                                        heuristicH=heuristicH,
+                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                        KqueueSize=KqueueSize)
+
+    if (virtualMachines > 1):
+
+        if (MIPnumber == 0 or MIPnumber == 1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimData,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_RealServiceTime_Q3_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+        if (MIPnumber == 0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues(inputData=SimData,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_Q3_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    heuristicH=heuristicH,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimDataCheap,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_CheapFeatures_Q3_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+
+        if (MIPnumber == 0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues(inputData=SimDataCheap,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_CheapFeatures_Q3_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    heuristicH=heuristicH,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData=SimDataTrivial,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_TrivialFeatures_Q3_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+
+        if (MIPnumber == 0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Queues(
+                                                                    inputData=SimDataTrivial,
+                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_TrivialFeatures_Q3_Simulation.csv",
+                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                    schedulingPolicy="MIP",
+                                                                    instanceCapTime=instanceCapTime,
+                                                                    searchTime=searchTime,
+                                                                    GAPsize=GAPsize,
+                                                                    model="model4",
+                                                                    heuristicH=heuristicH,
+                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                    KqueueSize=KqueueSize)
 
 ##############################
 ##############################
 
 
-def ExecuteMIPSimulations(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
+def ExecuteMIPSimulations2Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
 
     directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
     if not os.path.exists(directory):
@@ -635,7 +815,7 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                               heuristicH=heuristicH)
 
     if (testType == "ALLTESTS" or testType == "MIP"):
-        ExecuteMIPSimulations(MIPnumber,
+        ExecuteMIPSimulations3Q(MIPnumber,
                                       SimData = SimData ,
                                       SimDataAll = SimDataAll ,
                                       SimDataCheap = SimDataCheap ,
@@ -675,15 +855,15 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 1 #0 - all tests
+    testNumber = 2 #0 - all tests
     testType = "MIP" #ALLTESTS, POLICY or MIP
-    MIPnumber = 1 #0 - all MIP tests
-    virtualMachine = 4
+    MIPnumber = 2 #0 - all MIP tests
+    virtualMachine = 1
     heuristicH = 2
-    AverageRuntimeDiv = 1
+    AverageRuntimeDiv = 10 #2
     searchTime = 1
     GAPsize = 0
-    KqueueSize = 5 #Queue size for MIP_SJF hybrid approach
+    KqueueSize = 4 #Queue size for MIP_SJF hybrid approach
     RandomOrder = 1#Random ordering
 else:
     Partition = str(sys.argv[1])
