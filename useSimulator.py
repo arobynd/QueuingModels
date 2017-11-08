@@ -81,179 +81,38 @@ def prepareSimulationData(interArrivalTime, inputFileR, inputFileC, outputFile, 
 
     return finalSimData
 
-
 ##############################
 ##############################
 
-# def convertValuesToCSV(simulationData, column, startInstance, endInstance):
-#     s = str(int(simulationData.loc[startInstance, column]))
-#     for i in range(startInstance+1, endInstance+1):
-#          s = (s + "," + str(int(simulationData.loc[i, column])))
-#     return s
-#
-#
-# ##############################
-# ##############################
-#
-# def createEqualMaximumExpectedWaitingTime(value, n):
-#     s = str(int(value))
-#     for i in range(1, n):
-#         s = (s + "," + str(value))
-#     return s
-
-
-##############################
-##############################
-
-
-def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=3598, heuristicH=2):
+#Function that dequeues stopped instances using an Heuristic, these instances are not queued again
+#The functions implements a single queue (arrival)
+def ExecutePolicySimulations1Q(SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=3598, heuristicH=2):
 
     directory = "SimulationResults/"+dataSetPartition+"/"+simulationResultsDir
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-
-    # #########################################
-    # # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion models
-    # #########################################
-    print  "\nExecuting test FCFS_N_R_RealServiceTime_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimData,
-                              outputFile=directory+"/FCFS_N_R_RealServiceTime_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="FCFS",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_R_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataAll,
-                              outputFile=directory + "/FCFS_N_R_PredictedServiceTime_AllFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="FCFS",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_R_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataTrivial,
-                              outputFile=directory + "/FCFS_N_R_PredictedServiceTime_TrivialFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="FCFS",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_R_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataCheap,
-                              outputFile=directory + "/FCFS_N_R_PredictedServiceTime_CheapFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="FCFS",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_R_RealServiceTime_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimData,
-                              outputFile=directory + "/SJF_N_R_RealServiceTime_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="SJF",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_R_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataAll,
-                              outputFile=directory + "/SJF_N_R_PredictedServiceTime_AllFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="SJF",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_R_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataTrivial,
-                              outputFile=directory + "/SJF_N_R_PredictedServiceTime_TrivialFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="SJF",
-                              instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_R_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression( inputData=SimDataCheap,
-                              outputFile=directory + "/SJF_N_R_PredictedServiceTime_CheapFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="SJF",
-                              instanceCapTime=instanceCapTime)
-
-    # #########################################
-    # # NAIVE STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
-    # #########################################
-
-    print  "\nExecuting test FCFS_N_RC_RealServiceTime_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimData,
-                             outputFile=directory + "/FCFS_N_RC_RealServiceTime_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="FCFS",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_RC_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataAll,
-                             outputFile=directory + "/FCFS_N_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="FCFS",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_RC_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataTrivial,
-                             outputFile=directory + "/FCFS_N_RC_PredictedServiceTime_TrivialFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="FCFS",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test FCFS_N_RC_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataCheap,
-                             outputFile=directory + "/FCFS_N_RC_PredictedServiceTime_CheapFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="FCFS",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_RC_RealServiceTime_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimData,
-                             outputFile=directory + "/SJF_N_RC_RealServiceTime_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="SJF",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_RC_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataAll,
-                             outputFile=directory + "/SJF_N_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="SJF",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_RC_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataTrivial,
-                             outputFile=directory + "/SJF_N_RC_PredictedServiceTime_TrivialFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="SJF",
-                             instanceCapTime=instanceCapTime)
-
-    print  "\nExecuting test SJF_N_RC_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_NaiveStrategy_Regression_Classification(inputData=SimDataCheap,
-                             outputFile=directory + "/SJF_N_RC_PredictedServiceTime_CheapFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="SJF",
-                             instanceCapTime=instanceCapTime)
-
-
     #########################################
     # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion models
     #########################################
     print  "\nExecuting test FCFS_H_R_RealServiceTime_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimData,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimData,
                               outputFile=directory+"/FCFS_H_R_RealServiceTime_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
                               instanceCapTime=instanceCapTime,
                               heuristicH=heuristicH)
 
-    print  "\nExecuting test FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataAll,
-                              outputFile=directory + "/FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="FCFS",
-                              instanceCapTime=instanceCapTime,
-                              heuristicH=heuristicH)
+    # print  "\nExecuting test FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataAll,
+    #                           outputFile=directory + "/FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation.csv",
+    #                           VMs=createDefaultVMs(virtualMachines),
+    #                           schedulingPolicy="FCFS",
+    #                           instanceCapTime=instanceCapTime,
+    #                           heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataTrivial,
                               outputFile=directory + "/FCFS_H_R_PredictedServiceTime_TrivialFeatures_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
@@ -261,7 +120,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_R_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataCheap,
                               outputFile=directory + "/FCFS_H_R_PredictedServiceTime_CheapFeatures_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="FCFS",
@@ -269,23 +128,23 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_RealServiceTime_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimData,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimData,
                               outputFile=directory + "/SJF_H_R_RealServiceTime_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
                               instanceCapTime=instanceCapTime,
                               heuristicH=heuristicH)
 
-    print  "\nExecuting test SJF_H_R_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataAll,
-                              outputFile=directory + "/SJF_H_R_PredictedServiceTime_AllFeatures_Simulation.csv",
-                              VMs=createDefaultVMs(virtualMachines),
-                              schedulingPolicy="SJF",
-                              instanceCapTime=instanceCapTime,
-                              heuristicH=heuristicH)
+    # print  "\nExecuting test SJF_H_R_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataAll,
+    #                           outputFile=directory + "/SJF_H_R_PredictedServiceTime_AllFeatures_Simulation.csv",
+    #                           VMs=createDefaultVMs(virtualMachines),
+    #                           schedulingPolicy="SJF",
+    #                           instanceCapTime=instanceCapTime,
+    #                           heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataTrivial,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataTrivial,
                               outputFile=directory + "/SJF_H_R_PredictedServiceTime_TrivialFeatures_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
@@ -293,7 +152,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                               heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_R_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression(inputData=SimDataCheap,
+    simulateInstanceArrivals_HeuristicStrategy_Regression1Q(inputData=SimDataCheap,
                               outputFile=directory + "/SJF_H_R_PredictedServiceTime_CheapFeatures_Simulation.csv",
                               VMs=createDefaultVMs(virtualMachines),
                               schedulingPolicy="SJF",
@@ -305,23 +164,23 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
     # # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
     # #########################################
     print  "\nExecuting test FCFS_H_RC_RealServiceTime_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimData,
                              outputFile=directory + "/FCFS_H_RC_RealServiceTime_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
                              instanceCapTime=instanceCapTime,
                              heuristicH=heuristicH)
 
-    print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataAll,
-                             outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="FCFS",
-                             instanceCapTime=instanceCapTime,
-                             heuristicH=heuristicH)
+    # print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataAll,
+    #                          outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
+    #                          VMs=createDefaultVMs(virtualMachines),
+    #                          schedulingPolicy="FCFS",
+    #                          instanceCapTime=instanceCapTime,
+    #                          heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataTrivial,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataTrivial,
                              outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_TrivialFeatures_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
@@ -329,7 +188,7 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              heuristicH=heuristicH)
 
     print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataCheap,
                              outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_CheapFeatures_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="FCFS",
@@ -337,23 +196,23 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_RealServiceTime_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimData,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimData,
                              outputFile=directory + "/SJF_H_RC_RealServiceTime_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
                              heuristicH=heuristicH)
 
-    print  "\nExecuting test SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataAll,
-                             outputFile=directory + "/SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
-                             VMs=createDefaultVMs(virtualMachines),
-                             schedulingPolicy="SJF",
-                             instanceCapTime=instanceCapTime,
-                             heuristicH=heuristicH)
+    # print  "\nExecuting test SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataAll,
+    #                          outputFile=directory + "/SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation.csv",
+    #                          VMs=createDefaultVMs(virtualMachines),
+    #                          schedulingPolicy="SJF",
+    #                          instanceCapTime=instanceCapTime,
+    #                          heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataTrivial,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataTrivial,
                              outputFile=directory + "/SJF_H_RC_PredictedServiceTime_TrivialFeatures_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
@@ -361,16 +220,346 @@ def ExecutePolicySimulations(SimData, SimDataAll, SimDataCheap, SimDataTrivial, 
                              heuristicH=heuristicH)
 
     print  "\nExecuting test SJF_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
-    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification(inputData=SimDataCheap,
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification1Q(inputData=SimDataCheap,
                              outputFile=directory + "/SJF_H_RC_PredictedServiceTime_CheapFeatures_Simulation.csv",
                              VMs=createDefaultVMs(virtualMachines),
                              schedulingPolicy="SJF",
                              instanceCapTime=instanceCapTime,
                              heuristicH=heuristicH)
+
 ##############################
 ##############################
 
+#Function that queues stopped instances in an auxiliary queue and sends these instances to execution when the system is Idle
+#The functions implements 2 queues (arrival, stopped)
+def ExecutePolicySimulations2Q(SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=3598, heuristicH=2):
 
+    directory = "SimulationResults/"+dataSetPartition+"/"+simulationResultsDir
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    #########################################
+    # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion models
+    #########################################
+    print  "\nExecuting test FCFS_H_R_RealServiceTime_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimData,
+                              outputFile=directory+"/FCFS_H_R_RealServiceTime_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="FCFS",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+    # print  "\nExecuting test FCFS_H_R_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataAll,
+    #                           outputFile=directory + "/FCFS_H_R_PredictedServiceTime_AllFeatures_Q2_Simulation.csv",
+    #                           VMs=createDefaultVMs(virtualMachines),
+    #                           schedulingPolicy="FCFS",
+    #                           instanceCapTime=instanceCapTime,
+    #                           heuristicH=heuristicH)
+
+    print  "\nExecuting test FCFS_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataTrivial,
+                              outputFile=directory + "/FCFS_H_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="FCFS",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+    print  "\nExecuting test FCFS_H_R_PredictedServiceTime_CheapFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataCheap,
+                              outputFile=directory + "/FCFS_H_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="FCFS",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_R_RealServiceTime_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimData,
+                              outputFile=directory + "/SJF_H_R_RealServiceTime_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="SJF",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+    # print  "\nExecuting test SJF_H_R_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataAll,
+    #                           outputFile=directory + "/SJF_H_R_PredictedServiceTime_AllFeatures_Q2_Simulation.csv",
+    #                           VMs=createDefaultVMs(virtualMachines),
+    #                           schedulingPolicy="SJF",
+    #                           instanceCapTime=instanceCapTime,
+    #                           heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_R_PredictedServiceTime_TrivialFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataTrivial,
+                              outputFile=directory + "/SJF_H_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="SJF",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_R_PredictedServiceTime_CheapFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression2Q(inputData=SimDataCheap,
+                              outputFile=directory + "/SJF_H_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                              VMs=createDefaultVMs(virtualMachines),
+                              schedulingPolicy="SJF",
+                              instanceCapTime=instanceCapTime,
+                              heuristicH=heuristicH)
+
+
+    # #########################################
+    # # HEURISTIC STRATEGY SIMULATIONS -- Using real service time and regresion/classification models
+    # #########################################
+    print  "\nExecuting test FCFS_H_RC_RealServiceTime_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimData,
+                             outputFile=directory + "/FCFS_H_RC_RealServiceTime_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="FCFS",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+    # print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataAll,
+    #                          outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_AllFeatures_Q2_Simulation.csv",
+    #                          VMs=createDefaultVMs(virtualMachines),
+    #                          schedulingPolicy="FCFS",
+    #                          instanceCapTime=instanceCapTime,
+    #                          heuristicH=heuristicH)
+
+    print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataTrivial,
+                             outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="FCFS",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+    print  "\nExecuting test FCFS_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataCheap,
+                             outputFile=directory + "/FCFS_H_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="FCFS",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_RC_RealServiceTime_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimData,
+                             outputFile=directory + "/SJF_H_RC_RealServiceTime_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="SJF",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+    # print  "\nExecuting test SJF_H_RC_PredictedServiceTime_AllFeatures_Simulation"
+    # simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataAll,
+    #                          outputFile=directory + "/SJF_H_RC_PredictedServiceTime_AllFeatures_Q2_Simulation.csv",
+    #                          VMs=createDefaultVMs(virtualMachines),
+    #                          schedulingPolicy="SJF",
+    #                          instanceCapTime=instanceCapTime,
+    #                          heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_RC_PredictedServiceTime_TrivialFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataTrivial,
+                             outputFile=directory + "/SJF_H_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="SJF",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+    print  "\nExecuting test SJF_H_RC_PredictedServiceTime_CheapFeatures_Simulation"
+    simulateInstanceArrivals_HeuristicStrategy_Regression_Classification2Q(inputData=SimDataCheap,
+                             outputFile=directory + "/SJF_H_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                             VMs=createDefaultVMs(virtualMachines),
+                             schedulingPolicy="SJF",
+                             instanceCapTime=instanceCapTime,
+                             heuristicH=heuristicH)
+
+##############################
+##############################
+
+#Function that dequeues stopped instances using an Heuristic, these instances are not queued again
+#The functions implement 2 queues (arrival, execution)
+def ExecuteMIPSimulations2Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
+
+    directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    H2=""
+    if(dequeueWhenNotScheduledMIP):
+        H2="_H"+str(dequeueWhenNotScheduledMIP)
+
+
+    #########################################
+    # HEURISTIC STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
+    #########################################
+    if (virtualMachines==1):
+
+        if (MIPnumber==0 or MIPnumber==1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_RealServiceTime_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+        if (MIPnumber==0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber==0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model1",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+        if (MIPnumber==0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
+                                                       outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                       VMs=createDefaultVMs(virtualMachines),
+                                                       schedulingPolicy="MIP",
+                                                       instanceCapTime=instanceCapTime,
+                                                       searchTime=searchTime,
+                                                       GAPsize=GAPsize,
+                                                       model="model2",
+                                                       heuristicH=heuristicH,
+                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                       KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber==0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
+                                                        outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                        VMs=createDefaultVMs(virtualMachines),
+                                                        schedulingPolicy="MIP",
+                                                        instanceCapTime=instanceCapTime,
+                                                        searchTime=searchTime,
+                                                        GAPsize=GAPsize,
+                                                        model="model1",
+                                                        heuristicH=heuristicH,
+                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                        KqueueSize = KqueueSize)
+
+        if (MIPnumber==0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues( inputData=SimDataTrivial,
+                                                                        outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                                        VMs=createDefaultVMs(virtualMachines),
+                                                                        schedulingPolicy="MIP",
+                                                                        instanceCapTime=instanceCapTime,
+                                                                        searchTime=searchTime,
+                                                                        GAPsize=GAPsize,
+                                                                        model="model2",
+                                                                        heuristicH=heuristicH,
+                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                        KqueueSize=KqueueSize)
+
+    if (virtualMachines > 1):
+
+        if (MIPnumber == 0 or MIPnumber == 1):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_RealServiceTime_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+        if (MIPnumber == 0 or MIPnumber == 2):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_Q2_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    heuristicH=heuristicH,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 3):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+
+        if (MIPnumber == 0 or MIPnumber == 4):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
+                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
+                                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                                    schedulingPolicy="MIP",
+                                                                                    instanceCapTime=instanceCapTime,
+                                                                                    searchTime=searchTime,
+                                                                                    GAPsize=GAPsize,
+                                                                                    model="model4",
+                                                                                    heuristicH=heuristicH,
+                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                                    KqueueSize=KqueueSize)
+
+            ###
+        if (MIPnumber == 0 or MIPnumber == 5):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
+                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                                     VMs=createDefaultVMs(virtualMachines),
+                                                                     schedulingPolicy="MIP",
+                                                                     instanceCapTime=instanceCapTime,
+                                                                     searchTime=searchTime,
+                                                                     GAPsize=GAPsize,
+                                                                     model="model3",
+                                                                     heuristicH=heuristicH,
+                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                     KqueueSize=KqueueSize)
+
+        if (MIPnumber == 0 or MIPnumber == 6):
+            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(
+                                                                    inputData=SimDataTrivial,
+                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
+                                                                    VMs=createDefaultVMs(virtualMachines),
+                                                                    schedulingPolicy="MIP",
+                                                                    instanceCapTime=instanceCapTime,
+                                                                    searchTime=searchTime,
+                                                                    GAPsize=GAPsize,
+                                                                    model="model4",
+                                                                    heuristicH=heuristicH,
+                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
+                                                                    KqueueSize=KqueueSize)
+
+##############################
+##############################
+
+#Function that queues stopped instances in an auxiliary queue and sends these instances to execution when the system is Idle
+#The functions implement 3 queues (arrival, execution, stopped)
 def ExecuteMIPSimulations3Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
 
     directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
@@ -552,192 +741,8 @@ def ExecuteMIPSimulations3Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimData
 ##############################
 
 
-def ExecuteMIPSimulations2Q(MIPnumber,SimData, SimDataAll, SimDataCheap, SimDataTrivial, dataSetPartition="10_90", simulationResultsDir="", virtualMachines=1,  instanceCapTime=0,  BigM=False, searchTime = 60, GAPsize = 0.1,  heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
-
-    directory = "SimulationResults/" + dataSetPartition + "/" + simulationResultsDir
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    H2=""
-    if(dequeueWhenNotScheduledMIP):
-        H2="_H"+str(dequeueWhenNotScheduledMIP)
-
-
-    #########################################
-    # HEURISTIC STRATEGY SIMULATIONS -- (Single Machine) Using model1 with regression and model 2 with regression/classification
-    #########################################
-    if (virtualMachines==1):
-
-        if (MIPnumber==0 or MIPnumber==1):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
-                                                       outputFile=directory + "/MIP_H"+H2+"_R_RealServiceTime_Q2_Simulation.csv",
-                                                       VMs=createDefaultVMs(virtualMachines),
-                                                       schedulingPolicy="MIP",
-                                                       instanceCapTime=instanceCapTime,
-                                                       searchTime=searchTime,
-                                                       GAPsize=GAPsize,
-                                                       model="model1",
-                                                       heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                       KqueueSize=KqueueSize)
-        if (MIPnumber==0 or MIPnumber == 2):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
-                                                       outputFile=directory + "/MIP_H"+H2+"_RC_RealServiceTime_Q2_Simulation.csv",
-                                                       VMs=createDefaultVMs(virtualMachines),
-                                                       schedulingPolicy="MIP",
-                                                       instanceCapTime=instanceCapTime,
-                                                       searchTime=searchTime,
-                                                       GAPsize=GAPsize,
-                                                       model="model2",
-                                                       heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                       KqueueSize=KqueueSize)
-
-            ###
-        if (MIPnumber==0 or MIPnumber == 3):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
-                                                       outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
-                                                       VMs=createDefaultVMs(virtualMachines),
-                                                       schedulingPolicy="MIP",
-                                                       instanceCapTime=instanceCapTime,
-                                                       searchTime=searchTime,
-                                                       GAPsize=GAPsize,
-                                                       model="model1",
-                                                       heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                       KqueueSize=KqueueSize)
-
-        if (MIPnumber==0 or MIPnumber == 4):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
-                                                       outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
-                                                       VMs=createDefaultVMs(virtualMachines),
-                                                       schedulingPolicy="MIP",
-                                                       instanceCapTime=instanceCapTime,
-                                                       searchTime=searchTime,
-                                                       GAPsize=GAPsize,
-                                                       model="model2",
-                                                       heuristicH=heuristicH,
-                                                       dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                       KqueueSize=KqueueSize)
-
-            ###
-        if (MIPnumber==0 or MIPnumber == 5):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
-                                                        outputFile=directory + "/MIP_H"+H2+"_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
-                                                        VMs=createDefaultVMs(virtualMachines),
-                                                        schedulingPolicy="MIP",
-                                                        instanceCapTime=instanceCapTime,
-                                                        searchTime=searchTime,
-                                                        GAPsize=GAPsize,
-                                                        model="model1",
-                                                        heuristicH=heuristicH,
-                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                        KqueueSize = KqueueSize)
-
-        if (MIPnumber==0 or MIPnumber == 6):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues( inputData=SimDataTrivial,
-                                                                        outputFile=directory + "/MIP_H"+H2+"_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
-                                                                        VMs=createDefaultVMs(virtualMachines),
-                                                                        schedulingPolicy="MIP",
-                                                                        instanceCapTime=instanceCapTime,
-                                                                        searchTime=searchTime,
-                                                                        GAPsize=GAPsize,
-                                                                        model="model2",
-                                                                        heuristicH=heuristicH,
-                                                                        dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                        KqueueSize=KqueueSize)
-
-    if (virtualMachines > 1):
-
-        if (MIPnumber == 0 or MIPnumber == 1):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimData,
-                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_RealServiceTime_Q2_Simulation.csv",
-                                                                     VMs=createDefaultVMs(virtualMachines),
-                                                                     schedulingPolicy="MIP",
-                                                                     instanceCapTime=instanceCapTime,
-                                                                     searchTime=searchTime,
-                                                                     GAPsize=GAPsize,
-                                                                     model="model3",
-                                                                     heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                     KqueueSize=KqueueSize)
-        if (MIPnumber == 0 or MIPnumber == 2):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimData,
-                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_RealServiceTime_Q2_Simulation.csv",
-                                                                                    VMs=createDefaultVMs(virtualMachines),
-                                                                                    schedulingPolicy="MIP",
-                                                                                    instanceCapTime=instanceCapTime,
-                                                                                    searchTime=searchTime,
-                                                                                    GAPsize=GAPsize,
-                                                                                    model="model4",
-                                                                                    heuristicH=heuristicH,
-                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                                    KqueueSize=KqueueSize)
-
-            ###
-        if (MIPnumber == 0 or MIPnumber == 3):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataCheap,
-                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
-                                                                     VMs=createDefaultVMs(virtualMachines),
-                                                                     schedulingPolicy="MIP",
-                                                                     instanceCapTime=instanceCapTime,
-                                                                     searchTime=searchTime,
-                                                                     GAPsize=GAPsize,
-                                                                     model="model3",
-                                                                     heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                     KqueueSize=KqueueSize)
-
-        if (MIPnumber == 0 or MIPnumber == 4):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(inputData=SimDataCheap,
-                                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_CheapFeatures_Q2_Simulation.csv",
-                                                                                    VMs=createDefaultVMs(virtualMachines),
-                                                                                    schedulingPolicy="MIP",
-                                                                                    instanceCapTime=instanceCapTime,
-                                                                                    searchTime=searchTime,
-                                                                                    GAPsize=GAPsize,
-                                                                                    model="model4",
-                                                                                    heuristicH=heuristicH,
-                                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                                    KqueueSize=KqueueSize)
-
-            ###
-        if (MIPnumber == 0 or MIPnumber == 5):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData=SimDataTrivial,
-                                                                     outputFile=directory + "/MIP_H" + H2 + "_R_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
-                                                                     VMs=createDefaultVMs(virtualMachines),
-                                                                     schedulingPolicy="MIP",
-                                                                     instanceCapTime=instanceCapTime,
-                                                                     searchTime=searchTime,
-                                                                     GAPsize=GAPsize,
-                                                                     model="model3",
-                                                                     heuristicH=heuristicH,
-                                                                     dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                     KqueueSize=KqueueSize)
-
-        if (MIPnumber == 0 or MIPnumber == 6):
-            MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Queues(
-                                                                    inputData=SimDataTrivial,
-                                                                    outputFile=directory + "/MIP_H" + H2 + "_RC_PredictedServiceTime_TrivialFeatures_Q2_Simulation.csv",
-                                                                    VMs=createDefaultVMs(virtualMachines),
-                                                                    schedulingPolicy="MIP",
-                                                                    instanceCapTime=instanceCapTime,
-                                                                    searchTime=searchTime,
-                                                                    GAPsize=GAPsize,
-                                                                    model="model4",
-                                                                    heuristicH=heuristicH,
-                                                                    dequeueWhenNotScheduledMIP=dequeueWhenNotScheduledMIP,
-                                                                    KqueueSize=KqueueSize)
-
-
 ############################################################
 ############################################################
-############################################################
-############################################################
-############################################################
-
-
-
 
 
 def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90", instanceMaximumExpectedWaitingTime=0,
@@ -804,34 +809,57 @@ def Test(testType,MIPnumber, simResultsDir="Simulation", dataSetPartition="10_90
                           RandomOrder=RandomOrder)
 
     if(testType=="ALLTESTS" or testType=="POLICY"):
-        ExecutePolicySimulations(SimData = SimData ,
-                              SimDataAll = SimDataAll ,
-                              SimDataCheap = SimDataCheap ,
-                              SimDataTrivial = SimDataTrivial,
-                              dataSetPartition=dataSetPartition,
-                              simulationResultsDir=simResultsDir,
-                              virtualMachines=virtualMachines,
-                              instanceCapTime=instanceCapTime,
-                              heuristicH=heuristicH)
+        # ExecutePolicySimulations1Q(SimData = SimData ,
+        #                       SimDataAll = SimDataAll ,
+        #                       SimDataCheap = SimDataCheap ,
+        #                       SimDataTrivial = SimDataTrivial,
+        #                       dataSetPartition=dataSetPartition,
+        #                       simulationResultsDir=simResultsDir,
+        #                       virtualMachines=virtualMachines,
+        #                       instanceCapTime=instanceCapTime,
+        #                       heuristicH=heuristicH)
+        ExecutePolicySimulations2Q(SimData=SimData,
+                                   SimDataAll=SimDataAll,
+                                   SimDataCheap=SimDataCheap,
+                                   SimDataTrivial=SimDataTrivial,
+                                   dataSetPartition=dataSetPartition,
+                                   simulationResultsDir=simResultsDir,
+                                   virtualMachines=virtualMachines,
+                                   instanceCapTime=instanceCapTime,
+                                   heuristicH=heuristicH)
 
     if (testType == "ALLTESTS" or testType == "MIP"):
+        # ExecuteMIPSimulations2Q(MIPnumber,
+        #                         SimData=SimData,
+        #                         SimDataAll=SimDataAll,
+        #                         SimDataCheap=SimDataCheap,
+        #                         SimDataTrivial=SimDataTrivial,
+        #                         dataSetPartition=dataSetPartition,
+        #                         simulationResultsDir=simResultsDir,
+        #                         virtualMachines=virtualMachines,
+        #                         instanceCapTime=instanceCapTime,
+        #                         BigM=False,
+        #                         searchTime=searchTime,
+        #                         GAPsize=GAPsize,
+        #                         heuristicH=heuristicH,
+        #                         dequeueWhenNotScheduledMIP=0,
+        #                         KqueueSize=KqueueSize)
+
         ExecuteMIPSimulations3Q(MIPnumber,
-                                      SimData = SimData ,
-                                      SimDataAll = SimDataAll ,
-                                      SimDataCheap = SimDataCheap ,
-                                      SimDataTrivial = SimDataTrivial,
-                                      dataSetPartition=dataSetPartition,
-                                      simulationResultsDir=simResultsDir,
-                                      virtualMachines=virtualMachines,
-                                      instanceCapTime=instanceCapTime,
-                                      BigM=False,
-                                      searchTime=searchTime,
-                                      GAPsize=GAPsize,
-                                      heuristicH=heuristicH,
-                                      dequeueWhenNotScheduledMIP=0,
-                                      KqueueSize=KqueueSize)
-
-
+                                  SimData = SimData ,
+                                  SimDataAll = SimDataAll ,
+                                  SimDataCheap = SimDataCheap ,
+                                  SimDataTrivial = SimDataTrivial,
+                                  dataSetPartition=dataSetPartition,
+                                  simulationResultsDir=simResultsDir,
+                                  virtualMachines=virtualMachines,
+                                  instanceCapTime=instanceCapTime,
+                                  BigM=False,
+                                  searchTime=searchTime,
+                                  GAPsize=GAPsize,
+                                  heuristicH=heuristicH,
+                                  dequeueWhenNotScheduledMIP=0,
+                                  KqueueSize=KqueueSize)
 
 
 
@@ -855,12 +883,12 @@ if(len(sys.argv)==1):
     Partition = "30_70"
     instanceType = "INDU"
     solver = "minisat"
-    testNumber = 2 #0 - all tests
-    testType = "MIP" #ALLTESTS, POLICY or MIP
+    testNumber = 8 #0 - all tests
+    testType = "POLICY" #ALLTESTS, POLICY or MIP
     MIPnumber = 2 #0 - all MIP tests
     virtualMachine = 1
     heuristicH = 2
-    AverageRuntimeDiv = 10 #2
+    AverageRuntimeDiv = 2 #2
     searchTime = 1
     GAPsize = 0
     KqueueSize = 4 #Queue size for MIP_SJF hybrid approach

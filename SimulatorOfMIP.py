@@ -7,8 +7,6 @@ import math
 import pandas as pd
 import numpy as np
 
-
-
 ##############################
 ##############################
 # def HeuristicDeleteWhenNotScheduledMIP(queue, Time, simData, vmID, dequeueWhenNotScheduledMIP=0):
@@ -96,7 +94,6 @@ def HeuristicEvaluateContinueToExecuteMIP_1Queue(queue, simData, VMs, ArrivingIn
 ##############################
 
 
-
 def HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue, simData, VMs, ArrivingInstanceTime, instanceCapTime, heuristicH, useClassification = False):
 
     vmID = getVMwithSmallestEndTime(VMs)
@@ -178,6 +175,7 @@ def HeuristicEvaluateContinueToExecuteMIP_2Queues(executionQueue, arrivingQueue,
             simData.loc[QueuedInstance.ID, "TimeInstanceInSystem"] = simData.loc[QueuedInstance.ID, "TimeServiceEnds"] - simData.loc[QueuedInstance.ID, "ArrivalTime"]
             VMs[vmID].processingInstanceID = QueuedInstance.ID
             VMs[vmID].nextEndTime = simData.loc[QueuedInstance.ID, "TimeServiceEnds"]
+
 
 ##############################
 ##############################
@@ -288,6 +286,8 @@ def HeuristicEvaluateContinueToExecuteMIP_3Queues(executionQueue, arrivingQueue,
 
 ##############################
 ##############################
+##############################
+##############################
 
 
 def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, nextEndTimeCSV, simData, model="model1", machines=1, nextEndTime=0):
@@ -375,6 +375,8 @@ def MIPupdateSchedule(queue, outputFile, searchTime, GAPsize, instanceCapTime, n
 
 ##############################
 ##############################
+##############################
+##############################
 
 def findLastMIPRunTime(outputFile):
     SolutionsLog = outputFile + "_SolutionsLog.txt"
@@ -389,6 +391,8 @@ def findLastMIPRunTime(outputFile):
 
 
 
+##############################
+##############################
 ##############################
 ##############################
 
@@ -473,6 +477,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData, 
                 stoppedQueue = sortBySJF(stoppedQueue)
                 stoppedInstance = stoppedQueue.get()
                 executionQueue.put(stoppedInstance )
+                print "Stopped instance added to execution queue:"
                 print stoppedInstance
 
         # If the queue is not empty after simulation, then put the instance in the queue. Otherwise attend it because the system is idle
@@ -520,8 +525,6 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_3Queues(inputData, 
         print "Inconsistent solution"
 
     return sim
-
-
 
 
 ##############################
@@ -657,9 +660,8 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_3Que
     return sim
 
 
-
-############################################################
-############################################################
+##############################
+##############################
 
 
 def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0, KqueueSize=4):
@@ -782,7 +784,6 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_2Queues(inputData, 
         print "Inconsistent solution"
 
     return sim
-
 
 
 ##############################
@@ -909,8 +910,10 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_Classification_2Que
 
     return sim
 
+
 ##############################
 ##############################
+
 
 def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, outputFile, VMs, schedulingPolicy, instanceCapTime, searchTime=120, GAPsize=0.1, model="model1", heuristicH=2, dequeueWhenNotScheduledMIP=0):
     simData = pd.read_csv(inputData, index_col=0)
@@ -981,6 +984,7 @@ def MIPsimulateInstanceArrivals_HeuristicStrategy_Regression_1Queue(inputData, o
         print "Inconsistent solution"
 
     return sim
+
 
 ##############################
 ##############################
